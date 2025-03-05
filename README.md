@@ -1,4 +1,4 @@
-# eslint-plugin-pnpm-catalogs
+# pnpm-catalogs-utils
 
 [![npm version][npm-version-src]][npm-version-href]
 [![npm downloads][npm-downloads-src]][npm-downloads-href]
@@ -6,7 +6,7 @@
 [![JSDocs][jsdocs-src]][jsdocs-href]
 [![License][license-src]][license-href]
 
-ESlint Plugin for pnpm Catalogs
+Utilities for working with pnpm catalogs
 
 ## Sponsors
 
@@ -16,9 +16,15 @@ ESlint Plugin for pnpm Catalogs
   </a>
 </p>
 
+<p align="center">
+  <a href="https://cdn.jsdelivr.net/gh/sxzz/sponsors/sponsors.svg">
+    <img src='https://cdn.jsdelivr.net/gh/sxzz/sponsors/sponsors.svg'/>
+  </a>
+</p>
+
 ## License
 
-[MIT](./LICENSE) License © [Anthony Fu](https://github.com/antfu)
+[MIT](./LICENSE) License © [Anthony Fu](https://github.com/antfu) & [三咲智子 Kevin Deng](https://github.com/sxzz)
 
 <!-- Badges -->
 

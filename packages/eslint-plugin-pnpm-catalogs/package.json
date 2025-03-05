@@ -4,8 +4,23 @@
   "version": "0.0.1",
   "description": "ESlint Plugin for pnpm Catalogs",
   "author": "Anthony Fu <anthonyfu117@hotmail.com>",
+  "contributors": [
+    {
+      "name": "三咲智子 Kevin Deng",
+      "email": "sxzz@sxzz.moe"
+    }
+  ],
   "license": "MIT",
-  "funding": "https://github.com/sponsors/antfu",
+  "funding": [
+    {
+      "type": "individual",
+      "url": "https://github.com/sponsors/antfu"
+    },
+    {
+      "type": "individual",
+      "url": "https://github.com/sponsors/sxzz"
+    }
+  ],
   "homepage": "https://github.com/antfu/eslint-plugin-pnpm-catalogs#readme",
   "repository": {
     "type": "git",
