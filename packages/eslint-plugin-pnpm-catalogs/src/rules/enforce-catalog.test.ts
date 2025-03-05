@@ -1,7 +1,20 @@
 import type { InvalidTestCase, ValidTestCase } from 'eslint-vitest-rule-tester'
-import { expect } from 'vitest'
+import { parsePnpmWorkspaceYaml } from 'pnpm-catalogs-utils'
+import { expect, vi } from 'vitest'
 import { run } from './_test'
 import rule, { RULE_NAME } from './enforce-catalog'
+
+vi.mock('./_doc', () => {
+  const doc = parsePnpmWorkspaceYaml('')
+  return {
+    readDoc: () => {
+      return {
+        ...doc,
+        write: vi.fn(),
+      }
+    },
+  }
+})
 
 const valids: ValidTestCase[] = [
   {
@@ -38,7 +51,7 @@ const invalids: InvalidTestCase[] = [
           "{
             "dependencies": {
               "react-dom": "catalog:react-dom",
-              "react": catalog:
+              "react": "catalog:"
             },
             "devDependencies": {
               "react-native": "catalog:react-native"

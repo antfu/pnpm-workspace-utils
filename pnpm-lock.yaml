@@ -21,6 +21,9 @@ catalogs:
     '@types/node':
       specifier: ^22.13.9
       version: 22.13.9
+    '@typescript-eslint/parser':
+      specifier: ^8.26.0
+      version: 8.26.0
     '@typescript-eslint/utils':
       specifier: ^8.26.0
       version: 8.26.0
@@ -33,6 +36,9 @@ catalogs:
     eslint-vitest-rule-tester:
       specifier: ^1.1.0
       version: 1.1.0
+    find-up-simple:
+      specifier: ^1.0.1
+      version: 1.0.1
     jiti:
       specifier: ^2.4.2
       version: 2.4.2
@@ -69,6 +75,9 @@ catalogs:
     vitest-package-exports:
       specifier: ^0.1.1
       version: 0.1.1
+    yaml:
+      specifier: ^2.7.0
+      version: 2.7.0
 
 importers:
 
@@ -144,20 +153,20 @@ importers:
         specifier: ^9.0.0
         version: 9.21.0(jiti@2.4.2)
       find-up-simple:
-        specifier: ^1.0.1
+        specifier: 'catalog:'
         version: 1.0.1
       pnpm-catalogs-utils:
         specifier: workspace:*
         version: link:../pnpm-catalogs-utils
     devDependencies:
       '@typescript-eslint/parser':
-        specifier: ^8.26.0
+        specifier: 'catalog:'
         version: 8.26.0(eslint@9.21.0(jiti@2.4.2))(typescript@5.8.2)
 
   packages/pnpm-catalogs-utils:
     dependencies:
       yaml:
-        specifier: ^2.7.0
+        specifier: 'catalog:'
         version: 2.7.0
 
 packages:
