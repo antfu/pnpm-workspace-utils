@@ -1,11 +1,13 @@
 import type { InvalidTestCase, ValidTestCase } from 'eslint-vitest-rule-tester'
 import { parsePnpmWorkspaceYaml } from 'pnpm-catalogs-utils'
-import { expect, vi } from 'vitest'
+import { beforeEach, expect, vi } from 'vitest'
+// @ts-expect-error mocked function
+import { _reset, readDoc } from './_doc'
 import { run } from './_test'
 import rule, { RULE_NAME } from './enforce-catalog'
 
 vi.mock('./_doc', () => {
-  const doc = parsePnpmWorkspaceYaml('')
+  let doc = parsePnpmWorkspaceYaml('')
   return {
     readDoc: () => {
       return {
@@ -13,7 +15,14 @@ vi.mock('./_doc', () => {
         write: vi.fn(),
       }
     },
+    _reset() {
+      doc = parsePnpmWorkspaceYaml('')
+    },
   }
+})
+
+beforeEach(() => {
+  _reset()
 })
 
 const valids: ValidTestCase[] = [
@@ -45,7 +54,7 @@ const invalids: InvalidTestCase[] = [
     errors: [
       { messageId: 'expectCatalog' },
     ],
-    output: (value) => {
+    output: async (value) => {
       expect(value)
         .toMatchInlineSnapshot(`
           "{
@@ -57,6 +66,14 @@ const invalids: InvalidTestCase[] = [
               "react-native": "catalog:react-native"
             }
           }"
+        `)
+
+      // TODO: figure out why this is not working
+      const pw = readDoc()!.toString()
+      expect(pw)
+        .toMatchInlineSnapshot(`
+          "null
+          "
         `)
     },
   },
