@@ -34,10 +34,10 @@
     "eslint": "^9.0.0"
   },
   "dependencies": {
-    "find-up-simple": "^1.0.1",
+    "find-up-simple": "catalog:",
     "pnpm-catalogs-utils": "workspace:*"
   },
   "devDependencies": {
-    "@typescript-eslint/parser": "^8.26.0"
+    "@typescript-eslint/parser": "catalog:"
   }
 }

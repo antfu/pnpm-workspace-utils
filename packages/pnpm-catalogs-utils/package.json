@@ -31,6 +31,6 @@
     "start": "tsx src/index.ts"
   },
   "dependencies": {
-    "yaml": "^2.7.0"
+    "yaml": "catalog:"
   }
 }

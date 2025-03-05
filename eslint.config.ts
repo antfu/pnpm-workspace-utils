@@ -12,7 +12,7 @@ export default antfu(
       'pnpm-catalogs': plugin,
     },
     rules: {
-      // 'pnpm-catalogs/enforce-catalog': 'error',
+      'pnpm-catalogs/enforce-catalog': 'error',
     },
   },
 )

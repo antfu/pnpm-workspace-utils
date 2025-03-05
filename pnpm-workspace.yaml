@@ -11,10 +11,12 @@ catalog:
   '@antfu/utils': ^9.1.0
   '@types/js-yaml': ^4.0.9
   '@types/node': ^22.13.9
+  '@typescript-eslint/parser': ^8.26.0
   '@typescript-eslint/utils': ^8.26.0
   bumpp: ^10.0.3
   eslint: ^9.21.0
   eslint-vitest-rule-tester: ^1.1.0
+  find-up-simple: ^1.0.1
   jiti: ^2.4.2
   js-yaml: ^4.1.0
   jsonc-eslint-parser: ^2.4.0
@@ -27,3 +29,4 @@ catalog:
   vite: ^6.2.0
   vitest: ^3.0.7
   vitest-package-exports: ^0.1.1
+  yaml: ^2.7.0
