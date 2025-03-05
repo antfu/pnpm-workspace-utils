@@ -30,11 +30,14 @@
     "prepublishOnly": "nr build",
     "start": "tsx src/index.ts"
   },
+  "peerDependencies": {
+    "eslint": "^9.0.0"
+  },
   "dependencies": {
-    "find-up-simple": "catalog:",
+    "find-up-simple": "^1.0.1",
     "pnpm-catalogs-utils": "workspace:*"
   },
   "devDependencies": {
-    "@typescript-eslint/parser": "catalog:"
+    "@typescript-eslint/parser": "^8.26.0"
   }
 }

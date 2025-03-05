@@ -1,9 +1,9 @@
 import type { AST } from 'jsonc-eslint-parser'
 import { createEslintRule } from '../utils'
-import { addToQueue } from './_queue'
+import { addToQueue, getDoc } from './_queue'
 
 export const RULE_NAME = 'enforce-catalog'
-export type MessageIds = 'expectCatalog'
+export type MessageIds = 'expectCatalog' | 'noPnpmWorkspaceYaml'
 export type Options = []
 
 export default createEslintRule<Options, MessageIds>({
@@ -16,6 +16,7 @@ export default createEslintRule<Options, MessageIds>({
     fixable: 'whitespace',
     schema: [],
     messages: {
+      noPnpmWorkspaceYaml: 'No `pnpm-workspace.yaml` found.',
       expectCatalog: 'Expect to use catalog instead of plain version, got "{{version}}".',
     },
   },
@@ -48,11 +49,20 @@ export default createEslintRule<Options, MessageIds>({
         const key = String(property.key.value)
         const value = String(property.value.value)
 
+        const doc = getDoc()
+        if (!doc) {
+          context.report({
+            node: property.value as any,
+            messageId: 'noPnpmWorkspaceYaml',
+          })
+          return {}
+        }
+
         context.report({
           node: property.value as any,
           messageId: 'expectCatalog',
           fix: (fixer) => {
-            addToQueue(context.filename, (doc) => {
+            addToQueue(() => {
               doc.setCatalogPackage('default', key, value)
             })
             return fixer.replaceText(property.value as any, `"catalog:"`)
