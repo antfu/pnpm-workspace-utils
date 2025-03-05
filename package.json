@@ -7,9 +7,7 @@
     "build": "pnpm -r run build",
     "stub": "pnpm -r run stub",
     "lint": "eslint .",
-    "prepublishOnly": "nr build",
-    "release": "bumpp && pnpm publish",
-    "start": "tsx src/index.ts",
+    "release": "bumpp -r && pnpm -r publish",
     "test": "vitest",
     "typecheck": "tsc --noEmit",
     "prepare": "simple-git-hooks"
