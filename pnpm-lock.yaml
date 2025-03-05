@@ -23,15 +23,27 @@ importers:
       '@types/node':
         specifier: ^22.13.9
         version: 22.13.9
+      '@typescript-eslint/utils':
+        specifier: ^8.26.0
+        version: 8.26.0(eslint@9.21.0(jiti@2.4.2))(typescript@5.8.2)
       bumpp:
         specifier: ^10.0.3
         version: 10.0.3
       eslint:
         specifier: ^9.21.0
         version: 9.21.0(jiti@2.4.2)
+      eslint-vitest-rule-tester:
+        specifier: ^1.1.0
+        version: 1.1.0(eslint@9.21.0(jiti@2.4.2))(typescript@5.8.2)(vitest@3.0.7(@types/debug@4.1.12)(@types/node@22.13.9)(jiti@2.4.2)(tsx@4.19.3)(yaml@2.7.0))
+      jiti:
+        specifier: ^2.4.2
+        version: 2.4.2
       js-yaml:
         specifier: ^4.1.0
         version: 4.1.0
+      jsonc-eslint-parser:
+        specifier: ^2.4.0
+        version: 2.4.0
       lint-staged:
         specifier: ^15.4.3
         version: 15.4.3
@@ -59,6 +71,25 @@ importers:
       vitest-package-exports:
         specifier: ^0.1.0
         version: 0.1.0
+
+  packages/eslint-plugin-pnpm-catalogs:
+    dependencies:
+      find-up-simple:
+        specifier: ^1.0.1
+        version: 1.0.1
+      pnpm-catalogs-utils:
+        specifier: workspace:*
+        version: link:../pnpm-catalogs-utils
+    devDependencies:
+      '@typescript-eslint/parser':
+        specifier: ^8.26.0
+        version: 8.26.0(eslint@9.21.0(jiti@2.4.2))(typescript@5.8.2)
+
+  packages/pnpm-catalogs-utils:
+    dependencies:
+      yaml:
+        specifier: ^2.7.0
+        version: 2.7.0
 
 packages:
 
@@ -114,6 +145,9 @@ packages:
   '@antfu/ni@23.3.1':
     resolution: {integrity: sha512-C90iyzm/jLV7Lomv2UzwWUzRv9WZr1oRsFRKsX5HjQL4EXrbi9H/RtBkjCP+NF+ABZXUKpAa4F1dkoTaea4zHg==}
     hasBin: true
+
+  '@antfu/utils@8.1.1':
+    resolution: {integrity: sha512-Mex9nXf9vR6AhcXmMrlz/HVgYYZpVGJ6YlPgwl7UnaFpnshXs6EK/oa5Gpf3CzENMjkvEx2tQtntGnb7UtSTOQ==}
 
   '@antfu/utils@9.1.0':
     resolution: {integrity: sha512-R+3bzxNN0ZscQg3ZVG7suqBTFP2dbdaCjKe5KY6hqNZimdyZ32KemotJPmoqQhKH28CqdgyXQGkWZlCGsGQmJw==}
@@ -759,6 +793,13 @@ packages:
       eslint: ^8.57.0 || ^9.0.0
       typescript: '>=4.8.4 <5.8.0'
 
+  '@typescript-eslint/parser@8.26.0':
+    resolution: {integrity: sha512-mNtXP9LTVBy14ZF3o7JG69gRPBK/2QWtQd0j0oH26HcY/foyJJau6pNUez7QrM5UHnSvwlQcJXKsk0I99B9pOA==}
+    engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
+    peerDependencies:
+      eslint: ^8.57.0 || ^9.0.0
+      typescript: '>=4.8.4 <5.9.0'
+
   '@typescript-eslint/scope-manager@8.25.0':
     resolution: {integrity: sha512-6PPeiKIGbgStEyt4NNXa2ru5pMzQ8OYKO1hX1z53HMomrmiSB+R5FmChgQAP1ro8jMtNawz+TRQo/cSXrauTpg==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
@@ -1386,6 +1427,12 @@ packages:
     resolution: {integrity: sha512-UyLnSehNt62FFhSwjZlHmeokpRK59rcz29j+F1/aDgbkbRTk7wIc9XzdoasMUbRNKDM0qQt/+BJ4BrpFeABemw==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
 
+  eslint-vitest-rule-tester@1.1.0:
+    resolution: {integrity: sha512-rilURDIBbHZKUDXdnlDnewJ3A5NdiK9HpYgdaeKY7rPpn+nI1KfvB/DyYMc0R8KgL9ziu5lbXVmWukgX0JPbAQ==}
+    peerDependencies:
+      eslint: ^9.0.0
+      vitest: ^1.0.0 || ^2.0.0 || ^3.0.0
+
   eslint@9.21.0:
     resolution: {integrity: sha512-KjeihdFqTPhOMXTt7StsDxriV4n66ueuF/jfPNC3j/lduHwr/ijDwJMsF+wyMJethgiKi5wniIE243vi07d3pg==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
@@ -1474,6 +1521,10 @@ packages:
 
   find-up-simple@1.0.0:
     resolution: {integrity: sha512-q7Us7kcjj2VMePAa02hDAF6d+MzsdsAWEwYyOpwUtlerRBkOEPBCRZrAV4XfcSN8fHAgaD0hP7miwoay6DCprw==}
+    engines: {node: '>=18'}
+
+  find-up-simple@1.0.1:
+    resolution: {integrity: sha512-afd4O7zpqHeRyg4PfDQsXmlDe2PfdHtJt6Akt8jOWaApLOZk5JXs6VMR29lz03pRe9mpykrRCYIYxaJYcfpncQ==}
     engines: {node: '>=18'}
 
   find-up@5.0.0:
@@ -2771,6 +2822,8 @@ snapshots:
 
   '@antfu/ni@23.3.1': {}
 
+  '@antfu/utils@8.1.1': {}
+
   '@antfu/utils@9.1.0': {}
 
   '@babel/code-frame@7.26.2':
@@ -3237,6 +3290,18 @@ snapshots:
       '@typescript-eslint/types': 8.25.0
       '@typescript-eslint/typescript-estree': 8.25.0(typescript@5.8.2)
       '@typescript-eslint/visitor-keys': 8.25.0
+      debug: 4.4.0
+      eslint: 9.21.0(jiti@2.4.2)
+      typescript: 5.8.2
+    transitivePeerDependencies:
+      - supports-color
+
+  '@typescript-eslint/parser@8.26.0(eslint@9.21.0(jiti@2.4.2))(typescript@5.8.2)':
+    dependencies:
+      '@typescript-eslint/scope-manager': 8.26.0
+      '@typescript-eslint/types': 8.26.0
+      '@typescript-eslint/typescript-estree': 8.26.0(typescript@5.8.2)
+      '@typescript-eslint/visitor-keys': 8.26.0
       debug: 4.4.0
       eslint: 9.21.0(jiti@2.4.2)
       typescript: 5.8.2
@@ -4040,6 +4105,17 @@ snapshots:
 
   eslint-visitor-keys@4.2.0: {}
 
+  eslint-vitest-rule-tester@1.1.0(eslint@9.21.0(jiti@2.4.2))(typescript@5.8.2)(vitest@3.0.7(@types/debug@4.1.12)(@types/node@22.13.9)(jiti@2.4.2)(tsx@4.19.3)(yaml@2.7.0)):
+    dependencies:
+      '@antfu/utils': 8.1.1
+      '@types/eslint': 9.6.1
+      '@typescript-eslint/utils': 8.26.0(eslint@9.21.0(jiti@2.4.2))(typescript@5.8.2)
+      eslint: 9.21.0(jiti@2.4.2)
+      vitest: 3.0.7(@types/debug@4.1.12)(@types/node@22.13.9)(jiti@2.4.2)(tsx@4.19.3)(yaml@2.7.0)
+    transitivePeerDependencies:
+      - supports-color
+      - typescript
+
   eslint@9.21.0(jiti@2.4.2):
     dependencies:
       '@eslint-community/eslint-utils': 4.4.1(eslint@9.21.0(jiti@2.4.2))
@@ -4160,6 +4236,8 @@ snapshots:
       to-regex-range: 5.0.1
 
   find-up-simple@1.0.0: {}
+
+  find-up-simple@1.0.1: {}
 
   find-up@5.0.0:
     dependencies:

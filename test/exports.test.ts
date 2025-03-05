@@ -3,10 +3,7 @@ import { x } from 'tinyexec'
 import { describe, expect, it } from 'vitest'
 import { getPackageExportsManifest } from 'vitest-package-exports'
 
-// TODO: remove this when you are ready for the first release
-const IS_READY = false
-
-describe.runIf(IS_READY)('exports-snapshot', async () => {
+describe('exports-snapshot', async () => {
   const packages: { name: string, path: string, private?: boolean }[] = JSON.parse(
     await x('pnpm', ['ls', '--only-projects', '-r', '--json']).then(r => r.stdout),
   )

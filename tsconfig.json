@@ -4,6 +4,9 @@
     "lib": ["ESNext"],
     "module": "ESNext",
     "moduleResolution": "Bundler",
+    "paths": {
+      "pnpm-catalogs-utils": ["./packages/pnpm-catalogs-utils/src/index.ts"]
+    },
     "resolveJsonModule": true,
     "strict": true,
     "strictNullChecks": true,
