@@ -1,7 +1,7 @@
 {
   "name": "pnpm-catalogs-utils",
   "type": "module",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Utils for pnpm Catalogs",
   "author": "Anthony Fu <anthonyfu117@hotmail.com>",
   "license": "MIT",
