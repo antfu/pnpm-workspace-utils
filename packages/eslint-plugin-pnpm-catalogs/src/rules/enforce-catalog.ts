@@ -4,7 +4,13 @@ import { addToQueue, getDoc } from './_queue'
 
 export const RULE_NAME = 'enforce-catalog'
 export type MessageIds = 'expectCatalog' | 'noPnpmWorkspaceYaml'
-export type Options = []
+export type Options = [
+  {
+    allowedProtocols?: string[]
+    autofix?: boolean
+    defaultCatalog?: string
+  },
+]
 
 export default createEslintRule<Options, MessageIds>({
   name: RULE_NAME,
@@ -14,14 +20,43 @@ export default createEslintRule<Options, MessageIds>({
       description: 'Enforce using "catalog:" in `package.json`',
     },
     fixable: 'whitespace',
-    schema: [],
+    schema: [
+      {
+        type: 'object',
+        properties: {
+          allowedProtocols: {
+            type: 'array',
+            description: 'Allowed protocols in specifier to not be converted to catalog',
+            items: {
+              type: 'string',
+            },
+          },
+          autofix: {
+            type: 'boolean',
+            description: 'Whether to autofix the linting error',
+            default: false,
+          },
+          defaultCatalog: {
+            type: 'string',
+            description: 'Default catalog to use when moving version to catalog with autofix',
+          },
+        },
+        additionalProperties: false,
+      },
+    ],
     messages: {
       noPnpmWorkspaceYaml: 'No `pnpm-workspace.yaml` found.',
       expectCatalog: 'Expect to use catalog instead of plain version, got "{{version}}".',
     },
   },
-  defaultOptions: [],
-  create(context) {
+  defaultOptions: [
+    {
+      allowedProtocols: ['workspace', 'link', 'file'],
+      defaultCatalog: 'default',
+      autofix: true,
+    },
+  ],
+  create(context, [options]) {
     if (!context.filename.endsWith('package.json'))
       return {}
 
@@ -43,11 +78,14 @@ export default createEslintRule<Options, MessageIds>({
           continue
         if (typeof property.value.value !== 'string')
           continue
-        if (property.value.value.match(/^(catalog|workspace|link|file):/))
-          continue
 
         const key = String(property.key.value)
         const value = String(property.value.value)
+
+        if (value.startsWith('catalog:'))
+          continue
+        if (options.allowedProtocols?.some(p => value.startsWith(p)))
+          continue
 
         const doc = getDoc()
         if (!doc) {
@@ -58,15 +96,22 @@ export default createEslintRule<Options, MessageIds>({
           return {}
         }
 
+        const catalog = options.defaultCatalog ?? 'default'
+
         context.report({
           node: property.value as any,
           messageId: 'expectCatalog',
-          fix: (fixer) => {
-            addToQueue(() => {
-              doc.setCatalogPackage('default', key, value)
-            })
-            return fixer.replaceText(property.value as any, `"catalog:"`)
-          },
+          fix: options.autofix
+            ? (fixer) => {
+                addToQueue(() => {
+                  doc.setCatalogPackage(catalog, key, value)
+                })
+                return fixer.replaceText(
+                  property.value as any,
+                  catalog === 'default' ? JSON.stringify('catalog:') : JSON.stringify(`catalog:${catalog}`),
+                )
+              }
+            : undefined,
         })
       }
     }
