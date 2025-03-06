@@ -21,6 +21,7 @@
     "@typescript-eslint/utils": "catalog:",
     "bumpp": "catalog:",
     "eslint": "catalog:",
+    "eslint-plugin-format": "catalog:",
     "eslint-vitest-rule-tester": "catalog:",
     "jiti": "catalog:",
     "js-yaml": "catalog:",

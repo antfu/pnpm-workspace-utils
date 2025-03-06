@@ -11,8 +11,13 @@ export function getDoc(): PnpmWorkspaceYamlWithWrite | undefined {
   return doc
 }
 
-export function addToQueue(fn: () => void): void {
-  queue.push(fn)
+export function addToQueue(fn: () => void, order: 'pre' | 'post' = 'post'): void {
+  if (order === 'pre') {
+    queue.unshift(fn)
+  }
+  else {
+    queue.push(fn)
+  }
   clearTimeout(queueTimer)
   queueTimer = setTimeout(() => {
     queueTimer = undefined

@@ -5,6 +5,7 @@ import plugin from './packages/eslint-plugin-pnpm-catalogs/src/index'
 export default antfu(
   {
     type: 'lib',
+    formatters: true,
   },
   {
     files: ['**/package.json'],

@@ -92,9 +92,11 @@ export default createEslintRule<Options, MessageIds>({
                 let catalog = existingCatalogs[0]
                 if (!catalog && autoInsert) {
                   catalog = autoInsertDefaultCatalog
+                  // In a case this might conflicts with the `enforce-catalog` rule,
+                  // we set pre to have lower priority
                   addToQueue(() => {
                     doc.setPackage(catalog, packageName, autoInsertDefaultSpecifier)
-                  })
+                  }, 'pre')
                 }
                 return fixer.replaceText(
                   property.value as any,
