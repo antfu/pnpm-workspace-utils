@@ -164,7 +164,7 @@ importers:
         specifier: catalog:prod
         version: 1.0.1
       jsonc-eslint-parser:
-        specifier: ^2.4.0
+        specifier: catalog:prod
         version: 2.4.0
       pnpm-catalogs-utils:
         specifier: workspace:*
