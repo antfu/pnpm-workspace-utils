@@ -1,13 +1,13 @@
-import type { PnpmWorkspaceYamlWithWrite } from './_doc'
-import { readDoc } from './_doc'
+import type { PnpmWorkspaceYamlWithWrite } from './read'
+import { readPnpmWorkspace } from './read'
 
 let queueTimer: ReturnType<typeof setTimeout> | undefined
 let queue: (() => void)[] = []
 
 let doc: PnpmWorkspaceYamlWithWrite | undefined
 
-export function getDoc(): PnpmWorkspaceYamlWithWrite | undefined {
-  doc ||= readDoc()
+export function getPnpmWorkspace(): PnpmWorkspaceYamlWithWrite | undefined {
+  doc ||= readPnpmWorkspace()
   return doc
 }
 
@@ -23,7 +23,7 @@ export function addToQueue(fn: () => void, order: 'pre' | 'post' = 'post'): void
     queueTimer = undefined
     const clone = [...queue]
     queue = []
-    getDoc()
+    getPnpmWorkspace()
     for (const fn of clone)
       fn()
     if (doc?.hasChanged()) {

@@ -2,8 +2,8 @@ import type { InvalidTestCase, ValidTestCase } from 'eslint-vitest-rule-tester'
 import { parsePnpmWorkspaceYaml } from 'pnpm-catalogs-utils'
 import { beforeEach, expect, vi } from 'vitest'
 // @ts-expect-error mocked function
-import { _reset, readDoc } from './_doc'
-import { run } from './_test'
+import { _reset, readPnpmWorkspace } from '../utils/read'
+import { run } from '../utils/test'
 import rule, { RULE_NAME } from './enforce-catalog'
 
 vi.mock('./_doc', () => {
@@ -69,7 +69,7 @@ const invalids: InvalidTestCase[] = [
         `)
 
       // TODO: figure out why this is not working
-      const pw = readDoc()!.toString()
+      const pw = readPnpmWorkspace()!.toString()
       expect(pw)
         .toMatchInlineSnapshot(`
           "null

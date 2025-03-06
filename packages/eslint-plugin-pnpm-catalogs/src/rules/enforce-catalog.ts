@@ -1,6 +1,6 @@
-import { createEslintRule } from '../utils'
-import { iterateDependencies } from './_iterate'
-import { addToQueue, getDoc } from './_queue'
+import { createEslintRule } from '../utils/create'
+import { iterateDependencies } from '../utils/iterate'
+import { addToQueue, getPnpmWorkspace } from '../utils/queue'
 
 export const RULE_NAME = 'enforce-catalog'
 export type MessageIds = 'expectCatalog' | 'noPnpmWorkspaceYaml'
@@ -70,7 +70,7 @@ export default createEslintRule<Options, MessageIds>({
       if (allowedProtocols?.some(p => specifier.startsWith(p)))
         continue
 
-      const doc = getDoc()
+      const doc = getPnpmWorkspace()
       if (!doc) {
         context.report({
           node: property.value as any,

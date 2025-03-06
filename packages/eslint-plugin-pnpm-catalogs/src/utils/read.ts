@@ -8,7 +8,7 @@ export interface PnpmWorkspaceYamlWithWrite extends PnpmWorkspaceYaml {
   write: () => void
 }
 
-export function readDoc(): PnpmWorkspaceYamlWithWrite | undefined {
+export function readPnpmWorkspace(): PnpmWorkspaceYamlWithWrite | undefined {
   const pwPath = findUpSync('pnpm-workspace.yaml', { cwd: process.cwd() })
   if (!pwPath)
     throw new Error('pnpm-workspace.yaml not found')

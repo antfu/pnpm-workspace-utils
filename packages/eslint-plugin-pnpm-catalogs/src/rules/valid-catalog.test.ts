@@ -2,8 +2,8 @@ import type { InvalidTestCase, ValidTestCase } from 'eslint-vitest-rule-tester'
 import { parsePnpmWorkspaceYaml } from 'pnpm-catalogs-utils'
 import { beforeEach, vi } from 'vitest'
 // @ts-expect-error mocked function
-import { _reset } from './_doc'
-import { run } from './_test'
+import { _reset } from '../utils/read'
+import { run } from '../utils/test'
 import rule, { RULE_NAME } from './enforce-catalog'
 
 vi.mock('./_doc', () => {

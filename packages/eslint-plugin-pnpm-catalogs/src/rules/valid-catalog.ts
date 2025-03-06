@@ -1,6 +1,6 @@
-import { createEslintRule } from '../utils'
-import { iterateDependencies } from './_iterate'
-import { addToQueue, getDoc } from './_queue'
+import { createEslintRule } from '../utils/create'
+import { iterateDependencies } from '../utils/iterate'
+import { addToQueue, getPnpmWorkspace } from '../utils/queue'
 
 export const RULE_NAME = 'valid-catalog'
 export type MessageIds = 'invalidCatalog' | 'noPnpmWorkspaceYaml'
@@ -8,7 +8,6 @@ export type Options = [
   {
     autofix?: boolean
     autoInsert?: boolean
-    autoInsertDefaultCatalog?: string
     autoInsertDefaultSpecifier?: string
   },
 ]
@@ -35,11 +34,6 @@ export default createEslintRule<Options, MessageIds>({
             description: 'Default specifier to use when auto inserting to catalog',
             default: '^0.0.0',
           },
-          autoInsertDefaultCatalog: {
-            type: 'string',
-            description: 'Default catalog to use when auto inserting to catalog',
-            default: 'default',
-          },
           autofix: {
             type: 'boolean',
             description: 'Whether to autofix the linting error',
@@ -60,14 +54,13 @@ export default createEslintRule<Options, MessageIds>({
       autoInsert = true,
       autofix = true,
       autoInsertDefaultSpecifier = '^0.0.0',
-      autoInsertDefaultCatalog = 'default',
     } = options || {}
 
     for (const { packageName, specifier, property } of iterateDependencies(context)) {
       if (!specifier.startsWith('catalog:'))
         continue
 
-      const doc = getDoc()
+      const doc = getPnpmWorkspace()
       if (!doc) {
         context.report({
           node: property.value as any,
@@ -76,9 +69,9 @@ export default createEslintRule<Options, MessageIds>({
         return {}
       }
 
-      const catalogName = specifier.replace(/^catalog:/, '').trim() || 'default'
+      const currentCatalog = specifier.replace(/^catalog:/, '').trim() || 'default'
       const existingCatalogs = doc.getPackageCatalogs(packageName)
-      if (!existingCatalogs.includes(catalogName)) {
+      if (!existingCatalogs.includes(currentCatalog)) {
         context.report({
           node: property.value as any,
           messageId: 'invalidCatalog',
@@ -91,7 +84,7 @@ export default createEslintRule<Options, MessageIds>({
             : (fixer) => {
                 let catalog = existingCatalogs[0]
                 if (!catalog && autoInsert) {
-                  catalog = autoInsertDefaultCatalog
+                  catalog = currentCatalog
                   // In a case this might conflicts with the `enforce-catalog` rule,
                   // we set pre to have lower priority
                   addToQueue(() => {
