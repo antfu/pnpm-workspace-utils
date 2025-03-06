@@ -5,29 +5,35 @@ packages:
   - examples/*
 onlyBuiltDependencies:
   - esbuild
-catalog:
-  '@antfu/eslint-config': ^4.5.1
-  '@antfu/ni': ^23.3.1
-  '@antfu/utils': ^9.1.0
-  '@types/js-yaml': ^4.0.9
-  '@types/node': ^22.13.9
-  '@typescript-eslint/parser': ^8.26.0
-  '@typescript-eslint/utils': ^8.26.0
-  bumpp: ^10.0.3
-  eslint: ^9.21.0
-  eslint-plugin-format: ^1.0.1
-  eslint-vitest-rule-tester: ^1.1.0
-  find-up-simple: ^1.0.1
-  jiti: ^2.4.2
-  js-yaml: ^4.1.0
-  jsonc-eslint-parser: ^2.4.0
-  lint-staged: ^15.4.3
-  simple-git-hooks: ^2.11.1
-  tinyexec: ^0.3.2
-  tsx: ^4.19.3
-  typescript: ^5.8.2
-  unbuild: ^3.5.0
-  vite: ^6.2.0
-  vitest: ^3.0.7
-  vitest-package-exports: ^0.1.1
-  yaml: ^2.7.0
+
+catalogs:
+  dev:
+    '@antfu/ni': ^23.3.1
+    '@antfu/eslint-config': ^4.5.1
+    '@types/js-yaml': ^4.0.9
+    '@types/node': ^22.13.9
+    jiti: ^2.4.2
+    bumpp: ^10.0.3
+    eslint: ^9.21.0
+    eslint-plugin-format: ^1.0.1
+    eslint-vitest-rule-tester: ^1.1.0
+    tsx: ^4.19.3
+    lint-staged: ^15.4.3
+    simple-git-hooks: ^2.11.1
+    typescript: ^5.8.2
+    unbuild: ^3.5.0
+    vite: ^6.2.0
+    '@typescript-eslint/parser': ^8.26.0
+    '@typescript-eslint/utils': ^8.26.0
+    '@antfu/utils': ^9.1.0
+
+  test:
+    vitest: ^3.0.7
+    vitest-package-exports: ^0.1.1
+    tinyexec: ^0.3.2
+    js-yaml: ^4.1.0
+
+  prod:
+    find-up-simple: ^1.0.1
+    jsonc-eslint-parser: ^2.4.0
+    yaml: ^2.7.0

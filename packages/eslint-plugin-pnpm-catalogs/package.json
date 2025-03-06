@@ -49,10 +49,10 @@
     "eslint": "^9.0.0"
   },
   "dependencies": {
-    "find-up-simple": "catalog:",
+    "find-up-simple": "catalog:prod",
     "pnpm-catalogs-utils": "workspace:*"
   },
   "devDependencies": {
-    "@typescript-eslint/parser": "catalog:"
+    "@typescript-eslint/parser": "catalog:dev"
   }
 }

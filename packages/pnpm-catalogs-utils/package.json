@@ -46,6 +46,6 @@
     "start": "tsx src/index.ts"
   },
   "dependencies": {
-    "yaml": "catalog:"
+    "yaml": "catalog:prod"
   }
 }
