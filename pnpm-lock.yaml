@@ -5,7 +5,7 @@ settings:
   excludeLinksFromLockfile: false
 
 catalogs:
-  default:
+  dev:
     '@antfu/eslint-config':
       specifier: ^4.5.1
       version: 4.5.1
@@ -39,27 +39,15 @@ catalogs:
     eslint-vitest-rule-tester:
       specifier: ^1.1.0
       version: 1.1.0
-    find-up-simple:
-      specifier: ^1.0.1
-      version: 1.0.1
     jiti:
       specifier: ^2.4.2
       version: 2.4.2
-    js-yaml:
-      specifier: ^4.1.0
-      version: 4.1.0
-    jsonc-eslint-parser:
-      specifier: ^2.4.0
-      version: 2.4.0
     lint-staged:
       specifier: ^15.4.3
       version: 15.4.3
     simple-git-hooks:
       specifier: ^2.11.1
       version: 2.11.1
-    tinyexec:
-      specifier: ^0.3.2
-      version: 0.3.2
     tsx:
       specifier: ^4.19.3
       version: 4.19.3
@@ -72,85 +60,99 @@ catalogs:
     vite:
       specifier: ^6.2.0
       version: 6.2.0
+  prod:
+    find-up-simple:
+      specifier: ^1.0.1
+      version: 1.0.1
+    jsonc-eslint-parser:
+      specifier: ^2.4.0
+      version: 2.4.0
+    yaml:
+      specifier: ^2.7.0
+      version: 2.7.0
+  test:
+    js-yaml:
+      specifier: ^4.1.0
+      version: 4.1.0
+    tinyexec:
+      specifier: ^0.3.2
+      version: 0.3.2
     vitest:
       specifier: ^3.0.7
       version: 3.0.7
     vitest-package-exports:
       specifier: ^0.1.1
       version: 0.1.1
-    yaml:
-      specifier: ^2.7.0
-      version: 2.7.0
 
 importers:
 
   .:
     devDependencies:
       '@antfu/eslint-config':
-        specifier: 'catalog:'
+        specifier: catalog:dev
         version: 4.5.1(@typescript-eslint/utils@8.26.0(eslint@9.21.0(jiti@2.4.2))(typescript@5.8.2))(@vue/compiler-sfc@3.3.10)(eslint-plugin-format@1.0.1(eslint@9.21.0(jiti@2.4.2)))(eslint@9.21.0(jiti@2.4.2))(typescript@5.8.2)(vitest@3.0.7(@types/debug@4.1.12)(@types/node@22.13.9)(jiti@2.4.2)(tsx@4.19.3)(yaml@2.7.0))
       '@antfu/ni':
-        specifier: 'catalog:'
+        specifier: catalog:dev
         version: 23.3.1
       '@antfu/utils':
-        specifier: 'catalog:'
+        specifier: catalog:dev
         version: 9.1.0
       '@types/js-yaml':
-        specifier: 'catalog:'
+        specifier: catalog:dev
         version: 4.0.9
       '@types/node':
-        specifier: 'catalog:'
+        specifier: catalog:dev
         version: 22.13.9
       '@typescript-eslint/utils':
-        specifier: 'catalog:'
+        specifier: catalog:dev
         version: 8.26.0(eslint@9.21.0(jiti@2.4.2))(typescript@5.8.2)
       bumpp:
-        specifier: 'catalog:'
+        specifier: catalog:dev
         version: 10.0.3
       eslint:
-        specifier: 'catalog:'
+        specifier: catalog:dev
         version: 9.21.0(jiti@2.4.2)
       eslint-plugin-format:
-        specifier: 'catalog:'
+        specifier: catalog:dev
         version: 1.0.1(eslint@9.21.0(jiti@2.4.2))
       eslint-vitest-rule-tester:
-        specifier: 'catalog:'
+        specifier: catalog:dev
         version: 1.1.0(eslint@9.21.0(jiti@2.4.2))(typescript@5.8.2)(vitest@3.0.7(@types/debug@4.1.12)(@types/node@22.13.9)(jiti@2.4.2)(tsx@4.19.3)(yaml@2.7.0))
       jiti:
-        specifier: 'catalog:'
+        specifier: catalog:dev
         version: 2.4.2
       js-yaml:
-        specifier: 'catalog:'
+        specifier: catalog:test
         version: 4.1.0
       jsonc-eslint-parser:
-        specifier: 'catalog:'
+        specifier: catalog:prod
         version: 2.4.0
       lint-staged:
-        specifier: 'catalog:'
+        specifier: catalog:dev
         version: 15.4.3
       simple-git-hooks:
-        specifier: 'catalog:'
+        specifier: catalog:dev
         version: 2.11.1
       tinyexec:
-        specifier: 'catalog:'
+        specifier: catalog:test
         version: 0.3.2
       tsx:
-        specifier: 'catalog:'
+        specifier: catalog:dev
         version: 4.19.3
       typescript:
-        specifier: 'catalog:'
+        specifier: catalog:dev
         version: 5.8.2
       unbuild:
-        specifier: 'catalog:'
+        specifier: catalog:dev
         version: 3.5.0(typescript@5.8.2)
       vite:
-        specifier: 'catalog:'
+        specifier: catalog:dev
         version: 6.2.0(@types/node@22.13.9)(jiti@2.4.2)(tsx@4.19.3)(yaml@2.7.0)
       vitest:
-        specifier: 'catalog:'
+        specifier: catalog:test
         version: 3.0.7(@types/debug@4.1.12)(@types/node@22.13.9)(jiti@2.4.2)(tsx@4.19.3)(yaml@2.7.0)
       vitest-package-exports:
-        specifier: 'catalog:'
+        specifier: catalog:test
         version: 0.1.1
 
   packages/eslint-plugin-pnpm-catalogs:
@@ -159,20 +161,20 @@ importers:
         specifier: ^9.0.0
         version: 9.21.0(jiti@2.4.2)
       find-up-simple:
-        specifier: 'catalog:'
+        specifier: catalog:prod
         version: 1.0.1
       pnpm-catalogs-utils:
         specifier: workspace:*
         version: link:../pnpm-catalogs-utils
     devDependencies:
       '@typescript-eslint/parser':
-        specifier: 'catalog:'
+        specifier: catalog:dev
         version: 8.26.0(eslint@9.21.0(jiti@2.4.2))(typescript@5.8.2)
 
   packages/pnpm-catalogs-utils:
     dependencies:
       yaml:
-        specifier: 'catalog:'
+        specifier: catalog:prod
         version: 2.7.0
 
 packages:
