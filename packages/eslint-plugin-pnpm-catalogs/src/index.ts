@@ -1,5 +1,5 @@
 import type { ESLint } from 'eslint'
-import jsoncParser from 'jsonc-eslint-parser'
+import * as jsoncParser from 'jsonc-eslint-parser'
 import { rules } from './rules'
 
 export const plugin: ESLint.Plugin = {

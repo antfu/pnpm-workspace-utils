@@ -163,6 +163,9 @@ importers:
       find-up-simple:
         specifier: catalog:prod
         version: 1.0.1
+      jsonc-eslint-parser:
+        specifier: ^2.4.0
+        version: 2.4.0
       pnpm-catalogs-utils:
         specifier: workspace:*
         version: link:../pnpm-catalogs-utils
