@@ -10,23 +10,6 @@ on:
       - main
 
 jobs:
-  lint:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
-        with:
-          run_install: false
-      - uses: actions/setup-node@v4
-        with:
-          node-version: lts/*
-          cache: pnpm
-
-      - run: pnpm i -g @antfu/ni
-      - run: nci
-      - run: nr lint
-      - run: nr typecheck
-
   test:
     runs-on: ${{ matrix.os }}
 
@@ -50,4 +33,6 @@ jobs:
       - run: pnpm i -g @antfu/ni
       - run: nci
       - run: nr build
+      - run: nr lint
       - run: nr test
+      - run: nr typecheck
