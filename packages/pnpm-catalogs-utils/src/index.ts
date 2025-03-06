@@ -12,7 +12,8 @@ export interface PnpmWorkspaceYaml {
   hasChanged: () => boolean
   toJSON: () => PnpmWorkspaceYamlSchema
   toString: (options?: ToStringOptions) => string
-  setCatalogPackage: (catalog: 'default' | (string & {}), packageName: string, specifier: string) => void
+  setPackage: (catalog: 'default' | (string & {}), packageName: string, specifier: string) => void
+  getPackageCatalogs: (packageName: string) => string[]
 }
 
 /**
@@ -85,6 +86,24 @@ export function parsePnpmWorkspaceYaml(content: string): PnpmWorkspaceYaml {
     }
   }
 
+  function getPackageCatalogs(packageName: string): string[] {
+    const catalogs: string[] = []
+    const data = document.toJSON() || {}
+    if (data.catalogs) {
+      for (const catalog of Object.keys(data.catalogs)) {
+        if (data.catalogs[catalog]?.[packageName]) {
+          catalogs.push(catalog)
+        }
+      }
+    }
+    if (data.catalog) {
+      if (data.catalog[packageName]) {
+        catalogs.push('default')
+      }
+    }
+    return catalogs
+  }
+
   return {
     document,
     hasChanged: () => hasChanged,
@@ -93,7 +112,8 @@ export function parsePnpmWorkspaceYaml(content: string): PnpmWorkspaceYaml {
       singleQuote: countSingleQuote <= countDoubleQuote,
       ...options,
     }),
-    setCatalogPackage,
+    setPackage: setCatalogPackage,
+    getPackageCatalogs,
   }
 }
 

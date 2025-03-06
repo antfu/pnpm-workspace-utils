@@ -9,6 +9,7 @@ export type Options = [
     allowedProtocols?: string[]
     autofix?: boolean
     defaultCatalog?: string
+    reuseExistingCatalog?: boolean
   },
 ]
 
@@ -40,6 +41,11 @@ export default createEslintRule<Options, MessageIds>({
             type: 'string',
             description: 'Default catalog to use when moving version to catalog with autofix',
           },
+          reuseExistingCatalog: {
+            type: 'boolean',
+            description: 'Whether to reuse existing catalog when moving version to catalog with autofix',
+            default: true,
+          },
         },
         additionalProperties: false,
       },
@@ -49,14 +55,14 @@ export default createEslintRule<Options, MessageIds>({
       expectCatalog: 'Expect to use catalog instead of plain version, got "{{version}}".',
     },
   },
-  defaultOptions: [
-    {
-      allowedProtocols: ['workspace', 'link', 'file'],
-      defaultCatalog: 'default',
-      autofix: true,
-    },
-  ],
-  create(context, [options]) {
+  defaultOptions: [{}],
+  create(context, [options = {}]) {
+    const {
+      allowedProtocols = ['workspace', 'link', 'file'],
+      defaultCatalog = 'default',
+      autofix = true,
+      reuseExistingCatalog = true,
+    } = options || {}
     if (!context.filename.endsWith('package.json'))
       return {}
 
@@ -84,7 +90,7 @@ export default createEslintRule<Options, MessageIds>({
 
         if (value.startsWith('catalog:'))
           continue
-        if (options.allowedProtocols?.some(p => value.startsWith(p)))
+        if (allowedProtocols?.some(p => value.startsWith(p)))
           continue
 
         const doc = getDoc()
@@ -96,15 +102,17 @@ export default createEslintRule<Options, MessageIds>({
           return {}
         }
 
-        const catalog = options.defaultCatalog ?? 'default'
-
         context.report({
           node: property.value as any,
           messageId: 'expectCatalog',
-          fix: options.autofix
+          fix: autofix
             ? (fixer) => {
+                const catalog = reuseExistingCatalog
+                  ? (doc.getPackageCatalogs(key)[0] || defaultCatalog)
+                  : defaultCatalog
+
                 addToQueue(() => {
-                  doc.setCatalogPackage(catalog, key, value)
+                  doc.setPackage(catalog, key, value)
                 })
                 return fixer.replaceText(
                   property.value as any,

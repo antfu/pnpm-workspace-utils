@@ -19,12 +19,12 @@ catalogs:
 `
 
   const pw = parsePnpmWorkspaceYaml(input)
-  pw.setCatalogPackage('react18', '@vue/compiler-sfc', '^3.0.0')
-  pw.setCatalogPackage('react18', 'vue', '^3.0.0')
-  pw.setCatalogPackage('react18', 'nuxt', '^3.0.0')
-  pw.setCatalogPackage('react18', 'angular', '~16.0.0')
-  pw.setCatalogPackage('react18', 'react', '^18.3.0')
-  pw.setCatalogPackage('react19', 'react', '^19.1.0')
+  pw.setPackage('react18', '@vue/compiler-sfc', '^3.0.0')
+  pw.setPackage('react18', 'vue', '^3.0.0')
+  pw.setPackage('react18', 'nuxt', '^3.0.0')
+  pw.setPackage('react18', 'angular', '~16.0.0')
+  pw.setPackage('react18', 'react', '^18.3.0')
+  pw.setPackage('react19', 'react', '^19.1.0')
 
   expect(pw.toString()).toMatchInlineSnapshot(`
     "catalog:
@@ -46,13 +46,16 @@ catalogs:
         react: ^19.1.0
     "
   `)
+
+  expect(pw.getPackageCatalogs('react'))
+    .toEqual(['react18', 'react19', 'default'])
 })
 
 it('should create when empty', () => {
   const input = ''
   const pw = parsePnpmWorkspaceYaml(input)
-  pw.setCatalogPackage('default', 'react', '^18.2.0')
-  pw.setCatalogPackage('vue', 'vue', '^3.0.0')
+  pw.setPackage('default', 'react', '^18.2.0')
+  pw.setPackage('vue', 'vue', '^3.0.0')
 
   expect(pw.toString()).toMatchInlineSnapshot(`
     "catalog:
@@ -72,7 +75,7 @@ it('should work with anchor & alias', () => {
 `.trim()
 
   const pw = parsePnpmWorkspaceYaml(yaml)
-  pw.setCatalogPackage('default', 'react-dom', '^18.3.0')
+  pw.setPackage('default', 'react-dom', '^18.3.0')
 
   expect(pw.toString()).toMatchInlineSnapshot(`
     "catalog:
@@ -81,7 +84,7 @@ it('should work with anchor & alias', () => {
     "
   `)
 
-  pw.setCatalogPackage('default', 'react', '^18.2.0')
+  pw.setPackage('default', 'react', '^18.2.0')
   expect(pw.toString()).toMatchInlineSnapshot(`
     "catalog:
       react: &foo ^18.2.0
@@ -101,7 +104,7 @@ catalog:
 `.trim()
 
   const pw = parsePnpmWorkspaceYaml(yaml)
-  pw.setCatalogPackage('default', 'react-dom', '^18.3.0')
+  pw.setPackage('default', 'react-dom', '^18.3.0')
 
   expect(pw.toString()).toMatchInlineSnapshot(`
     "defines:
