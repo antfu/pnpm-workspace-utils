@@ -13,6 +13,7 @@ export default antfu(
     },
     rules: {
       'pnpm-catalogs/enforce-catalog': 'error',
+      'pnpm-catalogs/valid-catalog': 'error',
     },
   },
 )
