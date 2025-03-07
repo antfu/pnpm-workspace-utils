@@ -36,7 +36,7 @@ export default [
       parser: jsoncParser,
     },
     plugins: {
-      'pnpm-catalogs': plugin,
+      'pnpm-catalogs': pnpmCatalogs,
     },
     rules: {
       'pnpm-catalogs/enforce-catalog': 'error',
