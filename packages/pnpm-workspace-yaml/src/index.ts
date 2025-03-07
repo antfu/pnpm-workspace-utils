@@ -1,5 +1,5 @@
-import type { Alias, Document, Scalar, ToStringOptions } from 'yaml'
-import { isAlias, Pair, parseDocument, visit, YAMLMap } from 'yaml'
+import type { Alias, Document, Scalar, ToStringOptions, YAMLMap } from 'yaml'
+import { isAlias, Pair, parseDocument, visit } from 'yaml'
 
 export interface PnpmWorkspaceYamlSchema {
   packages?: string[]
@@ -13,6 +13,7 @@ export interface PnpmWorkspaceYaml {
   hasChanged: () => boolean
   toJSON: () => PnpmWorkspaceYamlSchema
   toString: (options?: ToStringOptions) => string
+  setPath: (path: string[], value: any) => void
   setPackage: (catalog: 'default' | (string & {}), packageName: string, specifier: string) => void
   getPackageCatalogs: (packageName: string) => string[]
 }
@@ -31,63 +32,63 @@ export function parsePnpmWorkspaceYaml(content: string): PnpmWorkspaceYaml {
     hasChanged = false
   }
 
-  function setCatalogPackage(catalogName: string, packageName: string, specifier: string): void {
-    let catalog: YAMLMap<Scalar.Parsed | string, Scalar.Parsed | string>
-    if (catalogName === 'default') {
-      if (!document.has('catalog')) {
-        document.set('catalog', new YAMLMap())
-      }
-      catalog = document.get('catalog') as YAMLMap<Scalar.Parsed, Scalar.Parsed>
-    }
-    else {
-      if (!document.has('catalogs')) {
-        document.set('catalogs', new YAMLMap())
-      }
-      const catalogs = document.get('catalogs') as YAMLMap
-      if (!catalogs.has(catalogName)) {
-        catalogs.set(catalogName, new YAMLMap())
-      }
-      catalog = catalogs.get(catalogName) as YAMLMap<Scalar.Parsed, Scalar.Parsed>
+  function setPath(path: string[], value: any): void {
+    let map = path.length === 1
+      ? (document.contents as unknown as YAMLMap<Scalar.Parsed | string, Scalar.Parsed | string>)
+      : (document.getIn(path.slice(0, -1)) as YAMLMap<Scalar.Parsed | string, Scalar.Parsed | string>)
+    if (!map) {
+      map = document.createNode({})
+      document.setIn(path.slice(0, -1), map)
     }
 
-    let pair = catalog.items.find(i => typeof i.key === 'string' ? i.key === packageName : i.key.value === packageName)
-    const keys = catalog.items.map(i => typeof i.key === 'string' ? i.key : String(i.key.value))
+    const key = path[path.length - 1]
+    let pair = map.items.find(i => typeof i.key === 'string' ? i.key === key : i.key.value === key)
+    const keys = map.items.map(i => typeof i.key === 'string' ? i.key : String(i.key.value))
     if (!pair) {
       let index = 0
       // Find the index to insert with sorted
       for (; index < keys.length; index++) {
-        if (keys[index].localeCompare(packageName) > 0) {
+        if (keys[index].localeCompare(key) > 0) {
           break
         }
       }
-      pair = new Pair(packageName, specifier) as any
-      catalog.items.splice(index, 0, pair!)
+      pair = new Pair(key, value) as any
+      map.items.splice(index, 0, pair!)
       hasChanged = true
     }
     else {
       if (isAlias(pair.value)) {
         const alias = findAnchor(document, pair.value)
         if (alias) {
-          if (alias.value !== specifier) {
-            alias.value = specifier
+          if (alias.value !== value) {
+            alias.value = value
             hasChanged = true
           }
         }
       }
       else {
         if (!pair.value || typeof pair.value === 'string') {
-          if (pair.value !== specifier) {
-            pair.value = specifier
+          if (pair.value !== value) {
+            pair.value = value
             hasChanged = true
           }
         }
         else {
-          if (pair.value.value !== specifier) {
-            pair.value.value = specifier
+          if (pair.value.value !== value) {
+            pair.value.value = value
             hasChanged = true
           }
         }
       }
+    }
+  }
+
+  function setCatalogPackage(catalogName: string, packageName: string, specifier: string): void {
+    if (catalogName === 'default') {
+      setPath(['catalog', packageName], specifier)
+    }
+    else {
+      setPath(['catalogs', catalogName, packageName], specifier)
     }
   }
 
@@ -124,6 +125,7 @@ export function parsePnpmWorkspaceYaml(content: string): PnpmWorkspaceYaml {
         ...options,
       })
     },
+    setPath,
     setPackage: setCatalogPackage,
     getPackageCatalogs,
   }

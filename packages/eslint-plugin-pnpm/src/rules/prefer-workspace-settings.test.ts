@@ -45,7 +45,10 @@ const invalids: InvalidTestCase[] = [
       const workspace = getMockedWorkspace()
       expect(workspace.toString())
         .toMatchInlineSnapshot(`
-          "null
+          "onlyBuiltDependencies:
+            - cypress
+          patchedDependencies:
+            '@hedgedoc/markdown-it-plugins@2.1.4': patches/@hedgedoc__markdown-it-plugins@2.1.4.patch
           "
         `)
     },

@@ -13,7 +13,7 @@ catalogs:
     next: ^13.0.0
     react-dom: ^18.2.0
     react: ^18.2.0
-    # Not even React 19
+  # Not even React 19
   react19:
     react: ^19.0.0
 `
@@ -41,7 +41,7 @@ catalogs:
         react-dom: ^18.2.0
         react: ^18.3.0
         vue: ^3.0.0
-        # Not even React 19
+      # Not even React 19
       react19:
         react: ^19.1.0
     "
