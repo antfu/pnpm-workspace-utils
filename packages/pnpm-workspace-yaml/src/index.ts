@@ -9,6 +9,7 @@ export interface PnpmWorkspaceYamlSchema {
 
 export interface PnpmWorkspaceYaml {
   document: Document.Parsed
+  setContent: (content: string) => void
   hasChanged: () => boolean
   toJSON: () => PnpmWorkspaceYamlSchema
   toString: (options?: ToStringOptions) => string
@@ -21,10 +22,14 @@ export interface PnpmWorkspaceYaml {
  * while preserving the comments, anchor, and alias.
  */
 export function parsePnpmWorkspaceYaml(content: string): PnpmWorkspaceYaml {
-  const countSingleQuote = content.split('\'').length - 1
-  const countDoubleQuote = content.split('"').length - 1
-  const document = parseDocument(content)
+  let document = parseDocument(content)
   let hasChanged = false
+
+  function setContent(newContent: string): void {
+    content = newContent
+    document = parseDocument(content)
+    hasChanged = false
+  }
 
   function setCatalogPackage(catalogName: string, packageName: string, specifier: string): void {
     let catalog: YAMLMap<Scalar.Parsed | string, Scalar.Parsed | string>
@@ -105,13 +110,20 @@ export function parsePnpmWorkspaceYaml(content: string): PnpmWorkspaceYaml {
   }
 
   return {
-    document,
+    get document() {
+      return document
+    },
+    setContent,
     hasChanged: () => hasChanged,
     toJSON: () => document.toJSON(),
-    toString: (options?: ToStringOptions) => document.toString({
-      singleQuote: countSingleQuote <= countDoubleQuote,
-      ...options,
-    }),
+    toString: (options?: ToStringOptions) => {
+      // guess quote based on the content
+      const singleQuote = content.split('\'').length >= content.split('"').length
+      return document.toString({
+        singleQuote,
+        ...options,
+      })
+    },
     setPackage: setCatalogPackage,
     getPackageCatalogs,
   }

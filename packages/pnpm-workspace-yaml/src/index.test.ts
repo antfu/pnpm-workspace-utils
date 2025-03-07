@@ -1,4 +1,4 @@
-import { expect, it } from 'vitest'
+import { describe, expect, it } from 'vitest'
 import { parsePnpmWorkspaceYaml } from '.'
 
 it('should update the catalog package', () => {
@@ -28,13 +28,13 @@ catalogs:
 
   expect(pw.toString()).toMatchInlineSnapshot(`
     "catalog:
-      "@unocss/core": ^0.66.0
+      '@unocss/core': ^0.66.0
       react: ^18.2.0
 
     catalogs:
       # Don't use React
       react18:
-        "@vue/compiler-sfc": ^3.0.0
+        '@vue/compiler-sfc': ^3.0.0
         angular: ~16.0.0
         next: ^13.0.0
         nuxt: ^3.0.0
@@ -115,4 +115,55 @@ catalog:
       react-dom: *react
     "
   `)
+
+  pw.setContent('')
+
+  expect(pw.toString()).toMatchInlineSnapshot(`
+    "null
+    "
+  `)
+
+  pw.setContent(`
+catalog:
+  '@unocss/core': ^66.0.0
+`)
+
+  pw.setPackage('default', '@unocss/vite', '^66.0.0')
+
+  expect(pw.toString()).toMatchInlineSnapshot(`
+    "catalog:
+      '@unocss/core': ^66.0.0
+      '@unocss/vite': ^66.0.0
+    "
+  `)
+})
+
+describe('preserve formatting', () => {
+  it('preseve quotes', () => {
+    const yaml1 = `
+catalog:
+  '@unocss/core': ^66.0.0
+`
+    const yaml2 = ` 
+catalog:
+  "@unocss/core": ^66.0.0
+`
+    const pw1 = parsePnpmWorkspaceYaml(yaml1)
+    const pw2 = parsePnpmWorkspaceYaml(yaml2)
+    pw1.setPackage('default', '@unocss/vite', '^66.0.0')
+    pw2.setPackage('default', '@unocss/vite', '^66.0.0')
+
+    expect(pw1.toString()).toMatchInlineSnapshot(`
+      "catalog:
+        '@unocss/core': ^66.0.0
+        '@unocss/vite': ^66.0.0
+      "
+    `)
+    expect(pw2.toString()).toMatchInlineSnapshot(`
+      "catalog:
+        "@unocss/core": ^66.0.0
+        "@unocss/vite": ^66.0.0
+      "
+    `)
+  })
 })
