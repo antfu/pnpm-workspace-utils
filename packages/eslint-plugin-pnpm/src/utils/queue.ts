@@ -4,10 +4,18 @@ import { readPnpmWorkspace } from './read'
 let queueTimer: ReturnType<typeof setTimeout> | undefined
 let queue: (() => void)[] = []
 
+const DOC_CACHE_TIME = 10_000
+let docLastTime: number | undefined
 let doc: PnpmWorkspaceYamlWithWrite | undefined
 
 export function getPnpmWorkspace(): PnpmWorkspaceYamlWithWrite | undefined {
-  doc ||= readPnpmWorkspace()
+  if (docLastTime && !queueTimer && Date.now() - docLastTime > DOC_CACHE_TIME) {
+    doc = undefined
+  }
+  if (!doc) {
+    doc = readPnpmWorkspace()
+    docLastTime = Date.now()
+  }
   return doc
 }
 
