@@ -9,7 +9,7 @@ export const plugin: ESLint.Plugin = {
 export const configs = {
   recommended: [
     {
-      name: 'pnpm-catalogs:package.json',
+      name: 'pnpm/package.json',
       files: [
         'package.json',
         '**/package.json',
@@ -18,11 +18,11 @@ export const configs = {
         parser: jsoncParser,
       },
       plugins: {
-        'pnpm-catalogs': plugin,
+        pnpm: plugin,
       },
       rules: {
-        'pnpm-catalogs/enforce-catalog': 'error',
-        'pnpm-catalogs/valid-catalog': 'error',
+        'pnpm/enforce-catalog': 'error',
+        'pnpm/valid-catalog': 'error',
       },
     },
   ],

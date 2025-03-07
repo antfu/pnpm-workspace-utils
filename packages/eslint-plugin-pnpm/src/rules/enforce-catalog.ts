@@ -3,7 +3,7 @@ import { iterateDependencies } from '../utils/iterate'
 import { addToQueue, getPnpmWorkspace } from '../utils/queue'
 
 export const RULE_NAME = 'enforce-catalog'
-export type MessageIds = 'expectCatalog' | 'noPnpmWorkspaceYaml'
+export type MessageIds = 'expectCatalog'
 export type Options = [
   {
     allowedProtocols?: string[]
@@ -51,7 +51,6 @@ export default createEslintRule<Options, MessageIds>({
       },
     ],
     messages: {
-      noPnpmWorkspaceYaml: 'No `pnpm-workspace.yaml` found.',
       expectCatalog: 'Expect to use catalog instead of plain specifier, got "{{specifier}}" for package "{{packageName}}".',
     },
   },
@@ -71,13 +70,8 @@ export default createEslintRule<Options, MessageIds>({
         continue
 
       const doc = getPnpmWorkspace()
-      if (!doc) {
-        context.report({
-          node: property.value as any,
-          messageId: 'noPnpmWorkspaceYaml',
-        })
+      if (!doc)
         return {}
-      }
 
       context.report({
         node: property.value as any,

@@ -3,7 +3,7 @@ import { iterateDependencies } from '../utils/iterate'
 import { addToQueue, getPnpmWorkspace } from '../utils/queue'
 
 export const RULE_NAME = 'valid-catalog'
-export type MessageIds = 'invalidCatalog' | 'noPnpmWorkspaceYaml'
+export type MessageIds = 'invalidCatalog'
 export type Options = [
   {
     autofix?: boolean
@@ -44,7 +44,6 @@ export default createEslintRule<Options, MessageIds>({
       },
     ],
     messages: {
-      noPnpmWorkspaceYaml: 'No `pnpm-workspace.yaml` found.',
       invalidCatalog: 'Catalog "{{specifier}}" for package "{{packageName}}" is not defined in `pnpm-workspace.yaml`.',
     },
   },
@@ -61,13 +60,8 @@ export default createEslintRule<Options, MessageIds>({
         continue
 
       const doc = getPnpmWorkspace()
-      if (!doc) {
-        context.report({
-          node: property.value as any,
-          messageId: 'noPnpmWorkspaceYaml',
-        })
+      if (!doc)
         return {}
-      }
 
       const currentCatalog = specifier.replace(/^catalog:/, '').trim() || 'default'
       const existingCatalogs = doc.getPackageCatalogs(packageName)
