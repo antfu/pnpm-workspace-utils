@@ -23,7 +23,7 @@ export const configs = {
       rules: {
         'pnpm/enforce-catalog': 'error',
         'pnpm/valid-catalog': 'error',
-        'prefer-workspace-settings': 'error',
+        'pnpm/prefer-workspace-settings': 'error',
       },
     },
   ],
