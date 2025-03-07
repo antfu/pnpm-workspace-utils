@@ -2,7 +2,7 @@ import type { RuleListener, RuleWithMeta, RuleWithMetaAndName } from '@typescrip
 import type { RuleContext } from '@typescript-eslint/utils/ts-eslint'
 import type { Rule } from 'eslint'
 
-const blobUrl = 'https://github.com/antfu/eslint-plugin-pnpm-catalogs/blob/main/src/rules/'
+const blobUrl = 'https://github.com/antfu/eslint-plugin-pnpm/blob/main/src/rules/'
 
 export type RuleModule<
   T extends readonly unknown[],

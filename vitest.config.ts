@@ -12,7 +12,7 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      'pnpm-catalogs-utils': fileURLToPath(new URL('./packages/pnpm-catalogs-utils/src', import.meta.url)),
+      'pnpm-workspace-yaml': fileURLToPath(new URL('./packages/pnpm-workspace-yaml/src', import.meta.url)),
     },
   },
 })

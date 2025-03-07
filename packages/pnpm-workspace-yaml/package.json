@@ -1,8 +1,8 @@
 {
-  "name": "pnpm-catalogs-utils",
+  "name": "pnpm-workspace-yaml",
   "type": "module",
   "version": "0.1.0",
-  "description": "Utils for pnpm Catalogs",
+  "description": "Utilities for managing pnpm-workspace.yaml",
   "author": "Anthony Fu <anthonyfu117@hotmail.com>",
   "contributors": [
     {
@@ -21,14 +21,16 @@
       "url": "https://github.com/sponsors/sxzz"
     }
   ],
-  "homepage": "https://github.com/antfu/eslint-plugin-pnpm-catalogs#readme",
+  "homepage": "https://github.com/antfu/eslint-plugin-pnpm#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/antfu/eslint-plugin-pnpm-catalogs.git",
-    "directory": "packages/pnpm-catalogs-utils"
+    "url": "git+https://github.com/antfu/eslint-plugin-pnpm.git",
+    "directory": "packages/pnpm-workspace-yaml"
   },
-  "bugs": "https://github.com/antfu/eslint-plugin-pnpm-catalogs/issues",
-  "keywords": [],
+  "bugs": "https://github.com/antfu/eslint-plugin-pnpm/issues",
+  "keywords": [
+    "pnpm"
+  ],
   "sideEffects": false,
   "exports": {
     ".": "./dist/index.mjs"

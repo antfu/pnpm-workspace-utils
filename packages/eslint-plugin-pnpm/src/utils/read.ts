@@ -1,8 +1,8 @@
-import type { PnpmWorkspaceYaml } from 'pnpm-catalogs-utils'
+import type { PnpmWorkspaceYaml } from 'pnpm-workspace-yaml'
 import fs from 'node:fs'
 import process from 'node:process'
 import { findUpSync } from 'find-up-simple'
-import { parsePnpmWorkspaceYaml } from 'pnpm-catalogs-utils'
+import { parsePnpmWorkspaceYaml } from 'pnpm-workspace-yaml'
 
 export interface PnpmWorkspaceYamlWithWrite extends PnpmWorkspaceYaml {
   write: () => void

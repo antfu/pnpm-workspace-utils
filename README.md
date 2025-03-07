@@ -1,11 +1,11 @@
-# pnpm-catalogs-utils
+# pnpm-workspace-utils
 
 This is a monorepo consisting of two packages:
 
-| Package                                                                 | Description                                                                                                                |
-| ----------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
-| [`eslint-plugin-pnpm-catalogs`](./packages/eslint-plugin-pnpm-catalogs) | ESLint plugin for enforcing and ensuring catalog usage with autofix                                                        |
-| [`pnpm-catalogs-utils`](./packages/pnpm-catalogs-utils)                 | Utilities for working with `pnpm-workspace.yaml` file, with comments, anchors, and references preservation on modification |
+| Package                                                 | Description                                                                                                                |
+| ------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| [`eslint-plugin-pnpm`](./packages/eslint-plugin-pnpm)   | ESLint plugin for enforcing and ensuring catalog usage with autofix                                                        |
+| [`pnpm-workspace-yaml`](./packages/pnpm-workspace-yaml) | Utilities for working with `pnpm-workspace.yaml` file, with comments, anchors, and references preservation on modification |
 
 ## Sponsors
 

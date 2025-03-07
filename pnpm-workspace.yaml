@@ -28,7 +28,7 @@ catalogs:
     '@antfu/utils': ^9.1.0
 
   test:
-    vitest: ^3.0.7
+    vitest: ^3.0.8
     vitest-package-exports: ^0.1.1
     tinyexec: ^0.3.2
     js-yaml: ^4.1.0

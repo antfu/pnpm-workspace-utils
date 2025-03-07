@@ -1,6 +1,6 @@
 // @ts-check
 import antfu from '@antfu/eslint-config'
-import plugin from './packages/eslint-plugin-pnpm-catalogs/src/index'
+import plugin from './packages/eslint-plugin-pnpm/src/index'
 
 export default antfu(
   {
@@ -10,11 +10,11 @@ export default antfu(
   {
     files: ['**/package.json'],
     plugins: {
-      'pnpm-catalogs': plugin,
+      pnpm: plugin,
     },
     rules: {
-      'pnpm-catalogs/enforce-catalog': 'error',
-      'pnpm-catalogs/valid-catalog': 'error',
+      'pnpm/enforce-catalog': 'error',
+      'pnpm/valid-catalog': 'error',
     },
   },
 )
