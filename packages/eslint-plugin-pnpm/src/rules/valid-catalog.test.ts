@@ -1,29 +1,6 @@
 import type { InvalidTestCase, ValidTestCase } from 'eslint-vitest-rule-tester'
-import { parsePnpmWorkspaceYaml } from 'pnpm-workspace-yaml'
-import { beforeEach, vi } from 'vitest'
-// @ts-expect-error mocked function
-import { _reset } from '../utils/read'
-import { run } from '../utils/test'
+import { run } from '../utils/_test'
 import rule, { RULE_NAME } from './enforce-catalog'
-
-vi.mock('../utils/read', () => {
-  let doc = parsePnpmWorkspaceYaml('')
-  return {
-    readDoc: () => {
-      return {
-        ...doc,
-        write: vi.fn(),
-      }
-    },
-    _reset() {
-      doc = parsePnpmWorkspaceYaml('')
-    },
-  }
-})
-
-beforeEach(() => {
-  _reset()
-})
 
 // TODO: add tests
 const valids: ValidTestCase[] = [

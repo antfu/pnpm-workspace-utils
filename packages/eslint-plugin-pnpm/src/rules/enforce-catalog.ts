@@ -1,6 +1,6 @@
 import { createEslintRule } from '../utils/create'
 import { iterateDependencies } from '../utils/iterate'
-import { addToQueue, getPnpmWorkspace } from '../utils/queue'
+import { getPnpmWorkspace } from '../utils/workspace'
 
 export const RULE_NAME = 'enforce-catalog'
 export type MessageIds = 'expectCatalog'
@@ -86,9 +86,10 @@ export default createEslintRule<Options, MessageIds>({
                 ? (workspace.getPackageCatalogs(packageName)[0] || defaultCatalog)
                 : defaultCatalog
 
-              addToQueue(() => {
+              workspace.queueChange(() => {
                 workspace.setPackage(catalog, packageName, specifier)
               })
+
               return fixer.replaceText(
                 property.value as any,
                 catalog === 'default' ? JSON.stringify('catalog:') : JSON.stringify(`catalog:${catalog}`),

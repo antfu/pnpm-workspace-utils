@@ -1,29 +1,7 @@
 import type { InvalidTestCase, ValidTestCase } from 'eslint-vitest-rule-tester'
-import { parsePnpmWorkspaceYaml } from 'pnpm-workspace-yaml'
-import { beforeEach, expect, vi } from 'vitest'
-// @ts-expect-error mocked function
-import { _reset, readPnpmWorkspace } from '../utils/read'
-import { run } from '../utils/test'
+import { expect } from 'vitest'
+import { getMockedWorkspace, run } from '../utils/_test'
 import rule, { RULE_NAME } from './enforce-catalog'
-
-vi.mock('../utils/read', () => {
-  let doc = parsePnpmWorkspaceYaml('')
-  return {
-    readDoc: () => {
-      return {
-        ...doc,
-        write: vi.fn(),
-      }
-    },
-    _reset() {
-      doc = parsePnpmWorkspaceYaml('')
-    },
-  }
-})
-
-beforeEach(() => {
-  _reset()
-})
 
 const valids: ValidTestCase[] = [
   {
@@ -68,11 +46,11 @@ const invalids: InvalidTestCase[] = [
           }"
         `)
 
-      // TODO: figure out why this is not working
-      const pw = readPnpmWorkspace()!.toString()
-      expect(pw)
+      const workspace = getMockedWorkspace()
+      expect(workspace.toString())
         .toMatchInlineSnapshot(`
-          "null
+          "catalog:
+            react: ^18.2.0
           "
         `)
     },

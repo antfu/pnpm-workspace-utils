@@ -1,6 +1,6 @@
 import { createEslintRule } from '../utils/create'
 import { getPackageJsonRootNode } from '../utils/iterate'
-import { getPnpmWorkspace } from '../utils/queue'
+import { getPnpmWorkspace } from '../utils/workspace'
 
 export const RULE_NAME = 'prefer-workspace-settings'
 export type MessageIds = 'unexpectedPnpmSettings'
@@ -59,11 +59,14 @@ export default createEslintRule<Options, MessageIds>({
 
             // TODO: write to pnpm-workspace.yaml
 
-            const start = pnpmNode.range[0]
+            let start = pnpmNode.range[0]
             let end = pnpmNode.range[1]
-            const token = context.sourceCode.getTokenAfter(pnpmNode as any)
-            if (token?.type === 'Punctuator' && token.value === ',')
-              end = token.range[1]
+            const before = context.sourceCode.getTokenBefore(pnpmNode as any)
+            if (before)
+              start = before.range[1]
+            const after = context.sourceCode.getTokenAfter(pnpmNode as any)
+            if (after?.type === 'Punctuator' && after.value === ',')
+              end = after.range[1]
             return fixer.removeRange([start, end])
           }
         : undefined,

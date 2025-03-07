@@ -1,6 +1,6 @@
 import { createEslintRule } from '../utils/create'
 import { iterateDependencies } from '../utils/iterate'
-import { addToQueue, getPnpmWorkspace } from '../utils/queue'
+import { getPnpmWorkspace } from '../utils/workspace'
 
 export const RULE_NAME = 'valid-catalog'
 export type MessageIds = 'invalidCatalog'
@@ -81,7 +81,7 @@ export default createEslintRule<Options, MessageIds>({
                   catalog = currentCatalog
                   // In a case this might conflicts with the `enforce-catalog` rule,
                   // we set pre to have lower priority
-                  addToQueue(() => {
+                  workspace.queueChange(() => {
                     workspace.setPackage(catalog, packageName, autoInsertDefaultSpecifier)
                   }, 'pre')
                 }
