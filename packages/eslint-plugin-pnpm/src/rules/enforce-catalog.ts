@@ -69,8 +69,8 @@ export default createEslintRule<Options, MessageIds>({
       if (allowedProtocols?.some(p => specifier.startsWith(p)))
         continue
 
-      const doc = getPnpmWorkspace()
-      if (!doc)
+      const workspace = getPnpmWorkspace()
+      if (!workspace)
         return {}
 
       context.report({
@@ -83,11 +83,11 @@ export default createEslintRule<Options, MessageIds>({
         fix: autofix
           ? (fixer) => {
               const catalog = reuseExistingCatalog
-                ? (doc.getPackageCatalogs(packageName)[0] || defaultCatalog)
+                ? (workspace.getPackageCatalogs(packageName)[0] || defaultCatalog)
                 : defaultCatalog
 
               addToQueue(() => {
-                doc.setPackage(catalog, packageName, specifier)
+                workspace.setPackage(catalog, packageName, specifier)
               })
               return fixer.replaceText(
                 property.value as any,

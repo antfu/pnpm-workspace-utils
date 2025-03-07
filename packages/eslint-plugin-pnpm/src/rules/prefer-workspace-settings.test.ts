@@ -4,12 +4,12 @@ import { beforeEach, expect, vi } from 'vitest'
 // @ts-expect-error mocked function
 import { _reset, readPnpmWorkspace } from '../utils/read'
 import { run } from '../utils/test'
-import rule, { RULE_NAME } from './enforce-catalog'
+import rule, { RULE_NAME } from './prefer-workspace-settings'
 
 vi.mock('../utils/read', () => {
   let doc = parsePnpmWorkspaceYaml('')
   return {
-    readDoc: () => {
+    readPnpmWorkspace: () => {
       return {
         ...doc,
         write: vi.fn(),
@@ -43,28 +43,25 @@ const invalids: InvalidTestCase[] = [
   {
     filename: 'package.json',
     code: JSON.stringify({
-      dependencies: {
-        'react-dom': 'catalog:react-dom',
-        'react': '^18.2.0',
+      pnpm: {
+        patchedDependencies: {
+          '@hedgedoc/markdown-it-plugins@2.1.4': 'patches/@hedgedoc__markdown-it-plugins@2.1.4.patch',
+        },
+        onlyBuiltDependencies: [
+          'cypress',
+        ],
       },
-      devDependencies: {
-        'react-native': 'catalog:react-native',
-      },
+      foo: 'bar',
     }, null, 2),
     errors: [
-      { messageId: 'expectCatalog' },
+      { messageId: 'unexpectedPnpmSettings' },
     ],
     output: async (value) => {
       expect(value)
         .toMatchInlineSnapshot(`
           "{
-            "dependencies": {
-              "react-dom": "catalog:react-dom",
-              "react": "catalog:"
-            },
-            "devDependencies": {
-              "react-native": "catalog:react-native"
-            }
+            
+            "foo": "bar"
           }"
         `)
 

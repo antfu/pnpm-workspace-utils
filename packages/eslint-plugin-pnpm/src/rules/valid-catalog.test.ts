@@ -6,7 +6,7 @@ import { _reset } from '../utils/read'
 import { run } from '../utils/test'
 import rule, { RULE_NAME } from './enforce-catalog'
 
-vi.mock('./_doc', () => {
+vi.mock('../utils/read', () => {
   let doc = parsePnpmWorkspaceYaml('')
   return {
     readDoc: () => {

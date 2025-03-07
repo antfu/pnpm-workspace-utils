@@ -59,12 +59,12 @@ export default createEslintRule<Options, MessageIds>({
       if (!specifier.startsWith('catalog:'))
         continue
 
-      const doc = getPnpmWorkspace()
-      if (!doc)
+      const workspace = getPnpmWorkspace()
+      if (!workspace)
         return {}
 
       const currentCatalog = specifier.replace(/^catalog:/, '').trim() || 'default'
-      const existingCatalogs = doc.getPackageCatalogs(packageName)
+      const existingCatalogs = workspace.getPackageCatalogs(packageName)
       if (!existingCatalogs.includes(currentCatalog)) {
         context.report({
           node: property.value as any,
@@ -82,7 +82,7 @@ export default createEslintRule<Options, MessageIds>({
                   // In a case this might conflicts with the `enforce-catalog` rule,
                   // we set pre to have lower priority
                   addToQueue(() => {
-                    doc.setPackage(catalog, packageName, autoInsertDefaultSpecifier)
+                    workspace.setPackage(catalog, packageName, autoInsertDefaultSpecifier)
                   }, 'pre')
                 }
                 return fixer.replaceText(

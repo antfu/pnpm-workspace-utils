@@ -5,18 +5,18 @@ let queueTimer: ReturnType<typeof setTimeout> | undefined
 let queue: (() => void)[] = []
 
 const DOC_CACHE_TIME = 10_000
-let docLastTime: number | undefined
-let doc: PnpmWorkspaceYamlWithWrite | undefined
+let workspaceLastRead: number | undefined
+let workspace: PnpmWorkspaceYamlWithWrite | undefined
 
 export function getPnpmWorkspace(): PnpmWorkspaceYamlWithWrite | undefined {
-  if (docLastTime && !queueTimer && Date.now() - docLastTime > DOC_CACHE_TIME) {
-    doc = undefined
+  if (workspaceLastRead && !queueTimer && Date.now() - workspaceLastRead > DOC_CACHE_TIME) {
+    workspace = undefined
   }
-  if (!doc) {
-    doc = readPnpmWorkspace()
-    docLastTime = Date.now()
+  if (!workspace) {
+    workspace = readPnpmWorkspace()
+    workspaceLastRead = Date.now()
   }
-  return doc
+  return workspace
 }
 
 export function addToQueue(fn: () => void, order: 'pre' | 'post' = 'post'): void {
@@ -34,9 +34,9 @@ export function addToQueue(fn: () => void, order: 'pre' | 'post' = 'post'): void
     getPnpmWorkspace()
     for (const fn of clone)
       fn()
-    if (doc?.hasChanged()) {
-      doc.write()
-      doc = undefined
+    if (workspace?.hasChanged()) {
+      workspace.write()
+      workspace = undefined
     }
   }, 0)
 }
