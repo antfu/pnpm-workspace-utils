@@ -44,9 +44,9 @@ catalogs:
       # Not even React 19
       react19:
         react: ^19.0.0
-      react18_h18_3_0:
+      specific_react18_h18_3_0:
         react: ^18.3.0
-      react19_h19_1_0:
+      specific_react19_h19_1_0:
         react: ^19.1.0
     "
   `)
@@ -86,7 +86,7 @@ it('should work with anchor & alias', () => {
       react: &foo ^18.2.0
       react-dom: *foo
     catalogs:
-      react-dom_h18_3_0:
+      specific_react-dom_h18_3_0:
         react-dom: ^18.3.0
     "
   `)
@@ -97,7 +97,7 @@ it('should work with anchor & alias', () => {
       react: &foo ^18.2.0
       react-dom: *foo
     catalogs:
-      react-dom_h18_3_0:
+      specific_react-dom_h18_3_0:
         react-dom: ^18.3.0
     "
   `)
@@ -124,7 +124,7 @@ catalog:
       react: *react
       react-dom: *react
     catalogs:
-      react-dom_h18_3_0:
+      specific_react-dom_h18_3_0:
         react-dom: ^18.3.0
     "
   `)
@@ -239,7 +239,7 @@ catalogs:
       "catalogs:
         dev:
           foo: ^1.0.0
-        dev_h2_0_0:
+        specific_dev_h2_0_0:
           foo: ^2.0.0
       "
     `)
@@ -250,9 +250,9 @@ catalogs:
       "catalogs:
         dev:
           foo: ^1.0.0
-        dev_h2_0_0:
+        specific_dev_h2_0_0:
           foo: ^2.0.0
-        dev_t3_0_0:
+        specific_dev_t3_0_0:
           foo: ~3.0.0
       "
     `)
@@ -267,7 +267,7 @@ catalog:
       "catalog:
         bar: ^1.0.0
       catalogs:
-        bar_h2_0_0:
+        specific_bar_h2_0_0:
           bar: ^2.0.0
       "
     `)
@@ -283,7 +283,7 @@ catalogs:
       "catalogs:
         test:
           baz: 1.0.0
-        test_h1_0_0:
+        specific_test_h1_0_0:
           baz: ^1.0.0
       "
     `)
@@ -311,7 +311,7 @@ catalogs:
       "catalogs:
         complex:
           qux: ^2.0.0
-        complex_h2_5_0:
+        specific_complex_h2_5_0:
           qux: ^2.5.0
       "
     `)
@@ -328,7 +328,7 @@ catalogs:
       "catalogs:
         versions:
           lib: 1.0.0
-        versions_1_0_1:
+        specific_versions_1_0_1:
           lib: 1.0.1
       "
     `)
@@ -346,7 +346,7 @@ catalogs:
       "catalogs:
         simple:
           test: 1.0.0
-        simple_2_0_0:
+        specific_simple_2_0_0:
           test: 2.0.0
       "
     `)

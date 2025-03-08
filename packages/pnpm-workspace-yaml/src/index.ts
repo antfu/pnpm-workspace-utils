@@ -130,7 +130,7 @@ export function parsePnpmWorkspaceYaml(content: string): PnpmWorkspaceYaml {
       // For default catalog, we need to create a new named catalog
       if (catalogName === 'default') {
         // Create a new catalog name based on the package and version
-        const newCatalogName = `${packageName}_${versionSuffix}`
+        const newCatalogName = `specific_${packageName}_${versionSuffix}`
 
         // Check if this catalog already exists
         if (data.catalogs?.[newCatalogName]) {
@@ -144,7 +144,7 @@ export function parsePnpmWorkspaceYaml(content: string): PnpmWorkspaceYaml {
       }
       else {
         // For named catalogs, create a version-specific catalog
-        const newCatalogName = `${catalogName}_${versionSuffix}`
+        const newCatalogName = `specific_${catalogName}_${versionSuffix}`
 
         // Check if this catalog already exists
         if (data.catalogs?.[newCatalogName]) {
