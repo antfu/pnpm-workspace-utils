@@ -1,8 +1,13 @@
 import type { ESLint } from 'eslint'
 import * as jsoncParser from 'jsonc-eslint-parser'
+import { name, version } from '../package.json'
 import { rules } from './rules'
 
 export const plugin: ESLint.Plugin = {
+  meta: {
+    name,
+    version,
+  },
   rules,
 }
 
