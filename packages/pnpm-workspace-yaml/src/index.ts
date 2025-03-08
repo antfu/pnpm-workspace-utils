@@ -84,11 +84,87 @@ export function parsePnpmWorkspaceYaml(content: string): PnpmWorkspaceYaml {
   }
 
   function setCatalogPackage(catalogName: string, packageName: string, specifier: string): void {
-    if (catalogName === 'default') {
-      setPath(['catalog', packageName], specifier)
+    // Check if the package already exists in any catalog
+    const data = document.toJSON() || {}
+    const existingSpecifier = catalogName === 'default'
+      ? data.catalog?.[packageName]
+      : data.catalogs?.[catalogName]?.[packageName]
+
+    // If the package exists with the same version, do nothing
+    if (existingSpecifier === specifier) {
+      return
+    }
+
+    // If the package exists with a different version, create a new version-specific catalog
+    if (existingSpecifier) {
+      // Convert version specifier to a valid suffix for the catalog name
+      // Replace special characters:
+      // ^ -> h (hat)
+      // ~ -> t (tilde)
+      // . -> _ (underscore)
+      // < -> l (less than)
+      // > -> g (greater than)
+      // = -> e (equals)
+      // * -> s (star)
+      // @ -> a (at)
+      // | -> p (pipe)
+      // & -> n (and)
+      // - -> m (minus)
+      // + -> u (plus)
+      // space -> _ (underscore)
+      const versionSuffix = specifier
+        .replace(/\^/g, 'h')
+        .replace(/~/g, 't')
+        .replace(/\./g, '_')
+        .replace(/</g, 'l')
+        .replace(/>/g, 'g')
+        .replace(/=/g, 'e')
+        .replace(/\*/g, 's')
+        .replace(/@/g, 'a')
+        .replace(/\|/g, 'p')
+        .replace(/&/g, 'n')
+        .replace(/-/g, 'm')
+        .replace(/\+/g, 'u')
+        .replace(/\s/g, '_')
+
+      // For default catalog, we need to create a new named catalog
+      if (catalogName === 'default') {
+        // Create a new catalog name based on the package and version
+        const newCatalogName = `${packageName}_${versionSuffix}`
+
+        // Check if this catalog already exists
+        if (data.catalogs?.[newCatalogName]) {
+          // If it exists, just add the package to it
+          setPath(['catalogs', newCatalogName, packageName], specifier)
+        }
+        else {
+          // Otherwise, create a new version-specific catalog
+          setPath(['catalogs', newCatalogName, packageName], specifier)
+        }
+      }
+      else {
+        // For named catalogs, create a version-specific catalog
+        const newCatalogName = `${catalogName}_${versionSuffix}`
+
+        // Check if this catalog already exists
+        if (data.catalogs?.[newCatalogName]) {
+          // If it exists, just add the package to it
+          setPath(['catalogs', newCatalogName, packageName], specifier)
+        }
+        else {
+          // Otherwise, create a new version-specific catalog
+          setPath(['catalogs', newCatalogName, packageName], specifier)
+        }
+      }
     }
     else {
-      setPath(['catalogs', catalogName, packageName], specifier)
+      // If the package doesn't exist in this catalog, add it normally
+      if (catalogName === 'default') {
+        setPath(['catalog', packageName], specifier)
+      }
+      else {
+        setPath(['catalogs', catalogName, packageName], specifier)
+      }
     }
   }
 
@@ -98,7 +174,10 @@ export function parsePnpmWorkspaceYaml(content: string): PnpmWorkspaceYaml {
     if (data.catalogs) {
       for (const catalog of Object.keys(data.catalogs)) {
         if (data.catalogs[catalog]?.[packageName]) {
-          catalogs.push(catalog)
+          // Filter out version-specific catalogs (those with underscores)
+          if (!catalog.includes('_')) {
+            catalogs.push(catalog)
+          }
         }
       }
     }
