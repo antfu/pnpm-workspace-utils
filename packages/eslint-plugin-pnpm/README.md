@@ -17,9 +17,25 @@ ESLint plugin to enforce and auto-fix pnpm catalogs.
 pnpm add -D eslint-plugin-pnpm jsonc-eslint-parser
 ```
 
+### Basic Usage
+
 ```js
 // eslint.config.mjs
-import pnpmCatalogs from 'eslint-plugin-pnpm'
+import { configs } from 'eslint-plugin-pnpm'
+
+export default [
+  {
+    ignores: ['**/node_modules/**', '**/dist/**'],
+  },
+  ...configs.recommended,
+]
+```
+
+### Advanced usage
+
+```js
+// eslint.config.mjs
+import pluginPnpm from 'eslint-plugin-pnpm'
 import * as jsoncParser from 'jsonc-eslint-parser'
 
 export default [
@@ -27,7 +43,7 @@ export default [
     ignores: ['**/node_modules/**', '**/dist/**'],
   },
   {
-    name: 'pnpm-catalogs:package.json',
+    name: 'pnpm/package.json',
     files: [
       'package.json',
       '**/package.json',
@@ -36,11 +52,12 @@ export default [
       parser: jsoncParser,
     },
     plugins: {
-      'pnpm-catalogs': pnpmCatalogs,
+      pnpm: pluginPnpm,
     },
     rules: {
-      'pnpm-catalogs/enforce-catalog': 'error',
-      'pnpm-catalogs/valid-catalog': 'error',
+      'pnpm/enforce-catalog': 'error',
+      'pnpm/valid-catalog': 'error',
+      'pnpm/prefer-workspace-settings': 'error',
     },
   },
 ]
@@ -70,7 +87,3 @@ export default [
 [license-href]: https://github.com/antfu/eslint-plugin-pnpm/blob/main/LICENSE
 [jsdocs-src]: https://img.shields.io/badge/jsdocs-reference-080f12?style=flat&colorA=080f12&colorB=1fa669
 [jsdocs-href]: https://www.jsdocs.io/package/eslint-plugin-pnpm
-
-```
-
-```
