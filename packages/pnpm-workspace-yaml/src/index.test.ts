@@ -39,20 +39,16 @@ catalogs:
         next: ^13.0.0
         nuxt: ^3.0.0
         react-dom: ^18.2.0
-        react: ^18.2.0
+        react: ^18.3.0
         vue: ^3.0.0
       # Not even React 19
       react19:
-        react: ^19.0.0
-      specific_react18_h18_3_0:
-        react: ^18.3.0
-      specific_react19_h19_1_0:
         react: ^19.1.0
     "
   `)
 
   expect(pw.getPackageCatalogs('react'))
-    .toEqual(['react18', 'react19', 'specific_react18_h18_3_0', 'specific_react19_h19_1_0', 'default'])
+    .toEqual(['react18', 'react19', 'default'])
 })
 
 it('should create when empty', () => {
@@ -83,11 +79,8 @@ it('should work with anchor & alias', () => {
 
   expect(pw.toString()).toMatchInlineSnapshot(`
     "catalog:
-      react: &foo ^18.2.0
+      react: &foo ^18.3.0
       react-dom: *foo
-    catalogs:
-      specific_react-dom_h18_3_0:
-        react-dom: ^18.3.0
     "
   `)
 
@@ -96,9 +89,6 @@ it('should work with anchor & alias', () => {
     "catalog:
       react: &foo ^18.2.0
       react-dom: *foo
-    catalogs:
-      specific_react-dom_h18_3_0:
-        react-dom: ^18.3.0
     "
   `)
 })
@@ -118,14 +108,11 @@ catalog:
 
   expect(pw.toString()).toMatchInlineSnapshot(`
     "defines:
-      - &react ^18.2.0
+      - &react ^18.3.0
 
     catalog:
       react: *react
       react-dom: *react
-    catalogs:
-      specific_react-dom_h18_3_0:
-        react-dom: ^18.3.0
     "
   `)
 
@@ -181,10 +168,65 @@ catalog:
   })
 })
 
-describe('pnpm-workspace-yaml', () => {
+describe('setPackageNoConflicts', () => {
+  it('should update the catalog package (no conflicts)', () => {
+    const input = `
+  catalog:
+    '@unocss/core': ^0.66.0
+    react: ^18.2.0
+  
+  catalogs:
+    # Don't use React
+    react18:
+      next: ^13.0.0
+      react-dom: ^18.2.0
+      react: ^18.2.0
+    # Not even React 19
+    react19:
+      react: ^19.0.0
+  `
+
+    const pw = parsePnpmWorkspaceYaml(input)
+    pw.setPackageNoConflicts('react18', '@vue/compiler-sfc', '^3.0.0')
+    pw.setPackageNoConflicts('react18', 'vue', '^3.0.0')
+    pw.setPackageNoConflicts('react18', 'nuxt', '^3.0.0')
+    pw.setPackageNoConflicts('svelte', 'svelte', '7.1.1')
+    pw.setPackageNoConflicts('react18', 'react', '^18.3.0')
+    pw.setPackageNoConflicts('react19', 'react', '^19.1.0')
+
+    expect(pw.toString()).toMatchInlineSnapshot(`
+      "catalog:
+        '@unocss/core': ^0.66.0
+        react: ^18.2.0
+
+      catalogs:
+        # Don't use React
+        react18:
+          '@vue/compiler-sfc': ^3.0.0
+          next: ^13.0.0
+          nuxt: ^3.0.0
+          react-dom: ^18.2.0
+          react: ^18.2.0
+          vue: ^3.0.0
+        # Not even React 19
+        react19:
+          react: ^19.0.0
+        svelte:
+          svelte: 7.1.1
+        specific_react18_h18_3_0:
+          react: ^18.3.0
+        specific_react19_h19_1_0:
+          react: ^19.1.0
+      "
+    `)
+
+    expect(pw.getPackageCatalogs('react'))
+      .toEqual(['react18', 'react19', 'specific_react18_h18_3_0', 'specific_react19_h19_1_0', 'default'])
+  })
+
   it('should set package in default catalog', () => {
     const workspace = parsePnpmWorkspaceYaml('')
-    workspace.setPackage('default', 'foo', '^1.0.0')
+    workspace.setPackageNoConflicts('default', 'foo', '^1.0.0')
     expect(workspace.toString()).toMatchInlineSnapshot(`
       "catalog:
         foo: ^1.0.0
@@ -194,7 +236,7 @@ describe('pnpm-workspace-yaml', () => {
 
   it('should set package in named catalog', () => {
     const workspace = parsePnpmWorkspaceYaml('')
-    workspace.setPackage('dev', 'foo', '^1.0.0')
+    workspace.setPackageNoConflicts('dev', 'foo', '^1.0.0')
     expect(workspace.toString()).toMatchInlineSnapshot(`
       "catalogs:
         dev:
@@ -225,7 +267,7 @@ catalogs:
     foo: ^1.0.0
 `)
     // Adding the same package with the same version should not create a new entry
-    workspace.setPackage('dev', 'foo', '^1.0.0')
+    workspace.setPackageNoConflicts('dev', 'foo', '^1.0.0')
     expect(workspace.toString()).toMatchInlineSnapshot(`
       "catalogs:
         dev:
@@ -234,7 +276,7 @@ catalogs:
     `)
 
     // Adding the same package with a different version should create a new catalog with version-based name
-    workspace.setPackage('dev', 'foo', '^2.0.0')
+    workspace.setPackageNoConflicts('dev', 'foo', '^2.0.0')
     expect(workspace.toString()).toMatchInlineSnapshot(`
       "catalogs:
         dev:
@@ -245,7 +287,7 @@ catalogs:
     `)
 
     // Adding the same package with yet another version should create another new catalog with version-based name
-    workspace.setPackage('dev', 'foo', '~3.0.0')
+    workspace.setPackageNoConflicts('dev', 'foo', '~3.0.0')
     expect(workspace.toString()).toMatchInlineSnapshot(`
       "catalogs:
         dev:
@@ -262,7 +304,7 @@ catalogs:
 catalog:
   bar: ^1.0.0
 `)
-    workspace2.setPackage('default', 'bar', '^2.0.0')
+    workspace2.setPackageNoConflicts('default', 'bar', '^2.0.0')
     expect(workspace2.toString()).toMatchInlineSnapshot(`
       "catalog:
         bar: ^1.0.0
@@ -278,7 +320,7 @@ catalogs:
   test:
     baz: 1.0.0
 `)
-    workspace3.setPackage('test', 'baz', '^1.0.0')
+    workspace3.setPackageNoConflicts('test', 'baz', '^1.0.0')
     expect(workspace3.toString()).toMatchInlineSnapshot(`
       "catalogs:
         test:
@@ -304,7 +346,7 @@ catalogs:
     `)
 
     // Now set the package with a different version
-    workspace4.setPackage('complex', 'qux', '^2.5.0')
+    workspace4.setPackageNoConflicts('complex', 'qux', '^2.5.0')
 
     // The expected result should have both the original catalog and a new catalog with a version-based name
     expect(workspace4.toString()).toMatchInlineSnapshot(`
@@ -322,7 +364,7 @@ catalogs:
   versions:
     lib: 1.0.0
 `)
-    workspace5.setPackage('versions', 'lib', '1.0.1')
+    workspace5.setPackageNoConflicts('versions', 'lib', '1.0.1')
 
     expect(workspace5.toString()).toMatchInlineSnapshot(`
       "catalogs:
@@ -340,7 +382,7 @@ catalogs:
   simple:
     test: 1.0.0
 `)
-    workspace.setPackage('simple', 'test', '2.0.0')
+    workspace.setPackageNoConflicts('simple', 'test', '2.0.0')
 
     expect(workspace.toString()).toMatchInlineSnapshot(`
       "catalogs:
