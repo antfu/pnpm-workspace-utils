@@ -174,10 +174,7 @@ export function parsePnpmWorkspaceYaml(content: string): PnpmWorkspaceYaml {
     if (data.catalogs) {
       for (const catalog of Object.keys(data.catalogs)) {
         if (data.catalogs[catalog]?.[packageName]) {
-          // Filter out version-specific catalogs (those with underscores)
-          if (!catalog.includes('_')) {
-            catalogs.push(catalog)
-          }
+          catalogs.push(catalog)
         }
       }
     }

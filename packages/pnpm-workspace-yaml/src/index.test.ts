@@ -52,7 +52,7 @@ catalogs:
   `)
 
   expect(pw.getPackageCatalogs('react'))
-    .toEqual(['react18', 'react19', 'default'])
+    .toEqual(['react18', 'react19', 'specific_react18_h18_3_0', 'specific_react19_h19_1_0', 'default'])
 })
 
 it('should create when empty', () => {
