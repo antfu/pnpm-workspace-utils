@@ -26,8 +26,8 @@ export const configs = {
         pnpm: plugin,
       },
       rules: {
-        'pnpm/enforce-catalog': 'error',
-        'pnpm/valid-catalog': 'error',
+        'pnpm/enforce-catalog': ['error', { enforceNoConflict: true }],
+        'pnpm/valid-catalog': ['error', { enforceNoConflict: true }],
         'pnpm/prefer-workspace-settings': 'error',
       },
     },

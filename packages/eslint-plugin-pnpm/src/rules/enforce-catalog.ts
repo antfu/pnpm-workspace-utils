@@ -10,6 +10,7 @@ export type Options = [
     autofix?: boolean
     defaultCatalog?: string
     reuseExistingCatalog?: boolean
+    enforceNoConflict?: boolean
   },
 ]
 
@@ -46,6 +47,11 @@ export default createEslintRule<Options, MessageIds>({
             description: 'Whether to reuse existing catalog when moving version to catalog with autofix',
             default: true,
           },
+          enforceNoConflict: {
+            type: 'boolean',
+            description: 'Whether to enforce no conflicts when adding packages to catalogs (will create version-specific catalogs)',
+            default: true,
+          },
         },
         additionalProperties: false,
       },
@@ -61,6 +67,7 @@ export default createEslintRule<Options, MessageIds>({
       defaultCatalog = 'default',
       autofix = true,
       reuseExistingCatalog = true,
+      enforceNoConflict = true,
     } = options || {}
 
     for (const { packageName, specifier, property } of iterateDependencies(context)) {
@@ -87,7 +94,12 @@ export default createEslintRule<Options, MessageIds>({
                 : defaultCatalog
 
               workspace.queueChange(() => {
-                workspace.setPackage(catalog, packageName, specifier)
+                if (enforceNoConflict) {
+                  workspace.setPackageNoConflicts(catalog, packageName, specifier)
+                }
+                else {
+                  workspace.setPackage(catalog, packageName, specifier)
+                }
               })
 
               return fixer.replaceText(

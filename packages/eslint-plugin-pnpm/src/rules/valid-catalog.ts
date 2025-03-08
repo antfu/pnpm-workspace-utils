@@ -9,6 +9,7 @@ export type Options = [
     autofix?: boolean
     autoInsert?: boolean
     autoInsertDefaultSpecifier?: string
+    enforceNoConflict?: boolean
   },
 ]
 
@@ -39,6 +40,11 @@ export default createEslintRule<Options, MessageIds>({
             description: 'Whether to autofix the linting error',
             default: true,
           },
+          enforceNoConflict: {
+            type: 'boolean',
+            description: 'Whether to enforce no conflicts when adding packages to catalogs (will create version-specific catalogs)',
+            default: true,
+          },
         },
         additionalProperties: false,
       },
@@ -53,6 +59,7 @@ export default createEslintRule<Options, MessageIds>({
       autoInsert = true,
       autofix = true,
       autoInsertDefaultSpecifier = '^0.0.0',
+      enforceNoConflict = true,
     } = options || {}
 
     for (const { packageName, specifier, property } of iterateDependencies(context)) {
@@ -82,7 +89,12 @@ export default createEslintRule<Options, MessageIds>({
                   // In a case this might conflicts with the `enforce-catalog` rule,
                   // we set pre to have lower priority
                   workspace.queueChange(() => {
-                    workspace.setPackage(catalog, packageName, autoInsertDefaultSpecifier)
+                    if (enforceNoConflict) {
+                      workspace.setPackage(catalog, packageName, autoInsertDefaultSpecifier)
+                    }
+                    else {
+                      workspace.setPackageNoConflicts(catalog, packageName, autoInsertDefaultSpecifier)
+                    }
                   }, 'pre')
                 }
                 return fixer.replaceText(

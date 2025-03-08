@@ -15,6 +15,7 @@ export interface PnpmWorkspaceYaml {
   toString: (options?: ToStringOptions) => string
   setPath: (path: string[], value: any) => void
   setPackage: (catalog: 'default' | (string & {}), packageName: string, specifier: string) => void
+  setPackageNoConflicts: (catalog: 'default' | (string & {}), packageName: string, specifier: string) => void
   getPackageCatalogs: (packageName: string) => string[]
 }
 
@@ -83,7 +84,7 @@ export function parsePnpmWorkspaceYaml(content: string): PnpmWorkspaceYaml {
     }
   }
 
-  function setCatalogPackage(catalogName: string, packageName: string, specifier: string): void {
+  function setPackageNoConflicts(catalogName: string, packageName: string, specifier: string): void {
     // Check if the package already exists in any catalog
     const data = document.toJSON() || {}
     const existingSpecifier = catalogName === 'default'
@@ -168,6 +169,16 @@ export function parsePnpmWorkspaceYaml(content: string): PnpmWorkspaceYaml {
     }
   }
 
+  function setPackage(catalogName: string, packageName: string, specifier: string): void {
+    // Simply set the package in the specified catalog, overriding any existing value
+    if (catalogName === 'default') {
+      setPath(['catalog', packageName], specifier)
+    }
+    else {
+      setPath(['catalogs', catalogName, packageName], specifier)
+    }
+  }
+
   function getPackageCatalogs(packageName: string): string[] {
     const catalogs: string[] = []
     const data = document.toJSON() || {}
@@ -202,7 +213,8 @@ export function parsePnpmWorkspaceYaml(content: string): PnpmWorkspaceYaml {
       })
     },
     setPath,
-    setPackage: setCatalogPackage,
+    setPackage,
+    setPackageNoConflicts,
     getPackageCatalogs,
   }
 }
