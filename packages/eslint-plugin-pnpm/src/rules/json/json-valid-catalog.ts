@@ -81,7 +81,7 @@ export default createEslintRule<Options, MessageIds>({
       if (!specifier.startsWith('catalog:'))
         continue
 
-      const workspace = getPnpmWorkspace()
+      const workspace = getPnpmWorkspace(context.filename)
       if (!workspace)
         return {}
 

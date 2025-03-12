@@ -49,7 +49,7 @@ export default createEslintRule<Options, MessageIds>({
     if (!pnpmNode)
       return {}
 
-    const workspace = getPnpmWorkspace()
+    const workspace = getPnpmWorkspace(context.filename)
     if (!workspace)
       return {}
 

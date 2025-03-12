@@ -12,8 +12,10 @@ import { _getWorkspace, _reset } from './_read'
 vi.mock('../utils/_read', () => {
   let workspace = parsePnpmWorkspaceYaml('')
   return {
+    findPnpmWorkspace: () => 'pnpm-workspace.yaml',
     readPnpmWorkspace: (): PnpmWorkspaceYamlExtended => {
       return {
+        lastRead: Date.now(),
         filepath: 'pnpm-workspace.yaml',
         ...workspace,
         hasQueue: () => false,

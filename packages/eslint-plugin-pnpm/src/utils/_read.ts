@@ -1,19 +1,25 @@
 import type { PnpmWorkspaceYaml } from 'pnpm-workspace-yaml'
 import fs from 'node:fs'
-import process from 'node:process'
 import { findUpSync } from 'find-up-simple'
+import { dirname } from 'pathe'
 import { parsePnpmWorkspaceYaml } from 'pnpm-workspace-yaml'
 
 export interface PnpmWorkspaceYamlExtended extends PnpmWorkspaceYaml {
   filepath: string
+  lastRead: number
   hasQueue: () => boolean
   queueChange: (fn: (doc: PnpmWorkspaceYaml) => void, order?: 'pre' | 'post') => void
 }
 
-export function readPnpmWorkspace(): PnpmWorkspaceYamlExtended | undefined {
-  const filepath = findUpSync('pnpm-workspace.yaml', { cwd: process.cwd() })
-  if (!filepath)
-    throw new Error('pnpm-workspace.yaml not found')
+export function findPnpmWorkspace(sourceFile: string): string | undefined {
+  return findUpSync('pnpm-workspace.yaml', {
+    cwd: dirname(sourceFile),
+  })
+}
+
+export function readPnpmWorkspace(
+  filepath: string,
+): PnpmWorkspaceYamlExtended | undefined {
   const content = fs.readFileSync(filepath, 'utf-8')
   const workspace = parsePnpmWorkspaceYaml(content)
 
@@ -45,6 +51,7 @@ export function readPnpmWorkspace(): PnpmWorkspaceYamlExtended | undefined {
 
   return {
     filepath,
+    lastRead: Date.now(),
     ...workspace,
     hasQueue,
     queueChange,
