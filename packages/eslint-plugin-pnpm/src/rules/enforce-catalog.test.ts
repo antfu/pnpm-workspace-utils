@@ -32,7 +32,7 @@ const invalids: InvalidTestCase[] = [
     errors: [
       { messageId: 'expectCatalog' },
     ],
-    async  output(value) {
+    async output(value) {
       expect(value)
         .toMatchInlineSnapshot(`
           "{
