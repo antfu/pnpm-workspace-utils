@@ -11,7 +11,13 @@ export type Options = [
     defaultCatalog?: string
     reuseExistingCatalog?: boolean
     enforceNoConflict?: boolean
+    fields?: string[]
   },
+]
+
+const DEFAULT_FIELDS = [
+  'dependencies',
+  'devDependencies',
 ]
 
 export default createEslintRule<Options, MessageIds>({
@@ -52,6 +58,12 @@ export default createEslintRule<Options, MessageIds>({
             description: 'Whether to enforce no conflicts when adding packages to catalogs (will create version-specific catalogs)',
             default: true,
           },
+          fields: {
+            type: 'array',
+            description: 'Fields to check for catalog',
+            items: { type: 'string' },
+            default: DEFAULT_FIELDS,
+          },
         },
         additionalProperties: false,
       },
@@ -68,9 +80,10 @@ export default createEslintRule<Options, MessageIds>({
       autofix = true,
       reuseExistingCatalog = true,
       enforceNoConflict = true,
+      fields = DEFAULT_FIELDS,
     } = options || {}
 
-    for (const { packageName, specifier, property } of iterateDependencies(context)) {
+    for (const { packageName, specifier, property } of iterateDependencies(context, fields)) {
       if (specifier.startsWith('catalog:'))
         continue
       if (allowedProtocols?.some(p => specifier.startsWith(p)))

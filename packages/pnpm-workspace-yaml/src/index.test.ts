@@ -213,15 +213,15 @@ describe('setPackageNoConflicts', () => {
           react: ^19.0.0
         svelte:
           svelte: 7.1.1
-        specific_react18_h18_3_0:
+        conflicts_react18_h18_3_0:
           react: ^18.3.0
-        specific_react19_h19_1_0:
+        conflicts_react19_h19_1_0:
           react: ^19.1.0
       "
     `)
 
     expect(pw.getPackageCatalogs('react'))
-      .toEqual(['react18', 'react19', 'specific_react18_h18_3_0', 'specific_react19_h19_1_0', 'default'])
+      .toEqual(['react18', 'react19', 'conflicts_react18_h18_3_0', 'conflicts_react19_h19_1_0', 'default'])
   })
 
   it('should set package in default catalog', () => {
@@ -281,7 +281,7 @@ catalogs:
       "catalogs:
         dev:
           foo: ^1.0.0
-        specific_dev_h2_0_0:
+        conflicts_dev_h2_0_0:
           foo: ^2.0.0
       "
     `)
@@ -292,9 +292,9 @@ catalogs:
       "catalogs:
         dev:
           foo: ^1.0.0
-        specific_dev_h2_0_0:
+        conflicts_dev_h2_0_0:
           foo: ^2.0.0
-        specific_dev_t3_0_0:
+        conflicts_dev_t3_0_0:
           foo: ~3.0.0
       "
     `)
@@ -309,7 +309,7 @@ catalog:
       "catalog:
         bar: ^1.0.0
       catalogs:
-        specific_bar_h2_0_0:
+        conflicts_bar_h2_0_0:
           bar: ^2.0.0
       "
     `)
@@ -325,7 +325,7 @@ catalogs:
       "catalogs:
         test:
           baz: 1.0.0
-        specific_test_h1_0_0:
+        conflicts_test_h1_0_0:
           baz: ^1.0.0
       "
     `)
@@ -353,7 +353,7 @@ catalogs:
       "catalogs:
         complex:
           qux: ^2.0.0
-        specific_complex_h2_5_0:
+        conflicts_complex_h2_5_0:
           qux: ^2.5.0
       "
     `)
@@ -370,7 +370,7 @@ catalogs:
       "catalogs:
         versions:
           lib: 1.0.0
-        specific_versions_1_0_1:
+        conflicts_versions_1_0_1:
           lib: 1.0.1
       "
     `)
@@ -388,7 +388,7 @@ catalogs:
       "catalogs:
         simple:
           test: 1.0.0
-        specific_simple_2_0_0:
+        conflicts_simple_2_0_0:
           test: 2.0.0
       "
     `)

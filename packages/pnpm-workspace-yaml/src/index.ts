@@ -14,7 +14,13 @@ export interface PnpmWorkspaceYaml {
   toJSON: () => PnpmWorkspaceYamlSchema
   toString: (options?: ToStringOptions) => string
   setPath: (path: string[], value: any) => void
+  /**
+   * Set a package to catalog
+   */
   setPackage: (catalog: 'default' | (string & {}), packageName: string, specifier: string) => void
+  /**
+   * Set a package to catalog only when the version matches, otherwise create a conflicts catalog
+   */
   setPackageNoConflicts: (catalog: 'default' | (string & {}), packageName: string, specifier: string) => void
   getPackageCatalogs: (packageName: string) => string[]
 }
@@ -91,6 +97,8 @@ export function parsePnpmWorkspaceYaml(content: string): PnpmWorkspaceYaml {
       ? data.catalog?.[packageName]
       : data.catalogs?.[catalogName]?.[packageName]
 
+    const prefix = 'conflicts_'
+
     // If the package exists with the same version, do nothing
     if (existingSpecifier === specifier) {
       return
@@ -131,7 +139,7 @@ export function parsePnpmWorkspaceYaml(content: string): PnpmWorkspaceYaml {
       // For default catalog, we need to create a new named catalog
       if (catalogName === 'default') {
         // Create a new catalog name based on the package and version
-        const newCatalogName = `specific_${packageName}_${versionSuffix}`
+        const newCatalogName = `${prefix}${packageName}_${versionSuffix}`
 
         // Check if this catalog already exists
         if (data.catalogs?.[newCatalogName]) {
@@ -145,7 +153,7 @@ export function parsePnpmWorkspaceYaml(content: string): PnpmWorkspaceYaml {
       }
       else {
         // For named catalogs, create a version-specific catalog
-        const newCatalogName = `specific_${catalogName}_${versionSuffix}`
+        const newCatalogName = `${prefix}${catalogName}_${versionSuffix}`
 
         // Check if this catalog already exists
         if (data.catalogs?.[newCatalogName]) {

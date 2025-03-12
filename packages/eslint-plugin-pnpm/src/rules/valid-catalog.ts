@@ -10,7 +10,18 @@ export type Options = [
     autoInsert?: boolean
     autoInsertDefaultSpecifier?: string
     enforceNoConflict?: boolean
+    fields?: string[]
   },
+]
+
+export const DEFAULT_FIELDS = [
+  'dependencies',
+  'devDependencies',
+  'optionalDependencies',
+  'peerDependencies',
+  'resolutions',
+  'overrides',
+  'pnpm.overrides',
 ]
 
 export default createEslintRule<Options, MessageIds>({
@@ -45,6 +56,11 @@ export default createEslintRule<Options, MessageIds>({
             description: 'Whether to enforce no conflicts when adding packages to catalogs (will create version-specific catalogs)',
             default: true,
           },
+          fields: {
+            type: 'array',
+            description: 'Fields to check for catalog',
+            default: DEFAULT_FIELDS,
+          },
         },
         additionalProperties: false,
       },
@@ -60,9 +76,10 @@ export default createEslintRule<Options, MessageIds>({
       autofix = true,
       autoInsertDefaultSpecifier = '^0.0.0',
       enforceNoConflict = true,
+      fields = DEFAULT_FIELDS,
     } = options || {}
 
-    for (const { packageName, specifier, property } of iterateDependencies(context)) {
+    for (const { packageName, specifier, property } of iterateDependencies(context, fields)) {
       if (!specifier.startsWith('catalog:'))
         continue
 
