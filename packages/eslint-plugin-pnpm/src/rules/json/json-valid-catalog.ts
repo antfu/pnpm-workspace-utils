@@ -1,6 +1,6 @@
-import { createEslintRule } from '../utils/create'
-import { iterateDependencies } from '../utils/iterate'
-import { getPnpmWorkspace } from '../utils/workspace'
+import { createEslintRule } from '../../utils/create'
+import { iterateDependencies } from '../../utils/iterate'
+import { getPnpmWorkspace } from '../../utils/workspace'
 
 export const RULE_NAME = 'valid-catalog'
 export type MessageIds = 'invalidCatalog'

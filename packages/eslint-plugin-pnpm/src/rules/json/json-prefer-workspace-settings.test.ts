@@ -1,7 +1,7 @@
 import type { InvalidTestCase, ValidTestCase } from 'eslint-vitest-rule-tester'
 import { expect } from 'vitest'
-import { getMockedWorkspace, run } from '../utils/_test'
-import rule, { RULE_NAME } from './prefer-workspace-settings'
+import { getMockedWorkspace, run } from '../../utils/_test'
+import rule, { RULE_NAME } from './json-prefer-workspace-settings'
 
 const valids: ValidTestCase[] = [
   {

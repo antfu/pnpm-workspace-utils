@@ -1,6 +1,6 @@
-import { createEslintRule } from '../utils/create'
-import { getPackageJsonRootNode } from '../utils/iterate'
-import { getPnpmWorkspace } from '../utils/workspace'
+import { createEslintRule } from '../../utils/create'
+import { getPackageJsonRootNode } from '../../utils/iterate'
+import { getPnpmWorkspace } from '../../utils/workspace'
 
 export const RULE_NAME = 'prefer-workspace-settings'
 export type MessageIds = 'unexpectedPnpmSettings'

@@ -54,9 +54,9 @@ export default [
       pnpm: pluginPnpm,
     },
     rules: {
-      'pnpm/enforce-catalog': 'error',
-      'pnpm/valid-catalog': 'error',
-      'pnpm/prefer-workspace-settings': 'error',
+      'pnpm/json-enforce-catalog': 'error',
+      'pnpm/json-valid-catalog': 'error',
+      'pnpm/json-prefer-workspace-settings': 'error',
     },
   },
 ]

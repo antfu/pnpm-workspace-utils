@@ -1,9 +1,5 @@
-import enforceCatalog from './enforce-catalog'
-import preferWorkspaceSettings from './prefer-workspace-settings'
-import validCatalog from './valid-catalog'
+import { rules as jsonRules } from './json'
 
 export const rules = {
-  'enforce-catalog': enforceCatalog,
-  'valid-catalog': validCatalog,
-  'prefer-workspace-settings': preferWorkspaceSettings,
+  ...jsonRules,
 }
