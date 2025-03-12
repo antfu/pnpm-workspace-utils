@@ -8,12 +8,16 @@
 
 ESLint plugin to enforce and auto-fix pnpm catalogs.
 
-This plugin applies to `package.json` and requires [`jsonc-eslint-parser`](https://github.com/ota-meshi/jsonc-eslint-parser) to be used as parser.
+This plugin consist with two set of rules that applies to `package.json` and `pnpm-workspace.yaml` respectively.
+
+- [`json-` rules](./src/rules/json) applies to `package.json` and requires [`jsonc-eslint-parser`](https://github.com/ota-meshi/jsonc-eslint-parser) to be used as parser.
+- [`yaml-` rules](./src/rules/yaml) applies to `pnpm-workspace.yaml` and requires [`yaml-eslint-parser`](https://github.com/ota-meshi/yaml-eslint-parser) to be used as parser.
+  - YAML support is still experimental as it might have race conditions with other plugins.
 
 ## Setup
 
 ```bash
-pnpm add -D eslint-plugin-pnpm jsonc-eslint-parser
+pnpm add -D eslint-plugin-pnpm
 ```
 
 ### Basic Usage
@@ -26,7 +30,8 @@ export default [
   {
     ignores: ['**/node_modules/**', '**/dist/**'],
   },
-  ...configs.recommended,
+  ...configs.json,
+  ...configs.yaml,
 ]
 ```
 
@@ -36,6 +41,7 @@ export default [
 // eslint.config.mjs
 import pluginPnpm from 'eslint-plugin-pnpm'
 import * as jsoncParser from 'jsonc-eslint-parser'
+import * as yamlParser from 'yaml-eslint-parser'
 
 export default [
   {
@@ -57,6 +63,20 @@ export default [
       'pnpm/json-enforce-catalog': 'error',
       'pnpm/json-valid-catalog': 'error',
       'pnpm/json-prefer-workspace-settings': 'error',
+    },
+  },
+  {
+    name: 'pnpm/pnpm-workspace-yaml',
+    files: ['pnpm-workspace.yaml'],
+    languageOptions: {
+      parser: yamlParser,
+    },
+    plugins: {
+      pnpm: pluginPnpm,
+    },
+    rules: {
+      'pnpm/yaml-no-unused-catalog-item': 'error',
+      'pnpm/yaml-no-duplicate-catalog-item': 'error',
     },
   },
 ]
