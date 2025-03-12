@@ -21,13 +21,13 @@
       "url": "https://github.com/sponsors/sxzz"
     }
   ],
-  "homepage": "https://github.com/antfu/eslint-plugin-pnpm#readme",
+  "homepage": "https://github.com/antfu/pnpm-workspace-utils#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/antfu/eslint-plugin-pnpm.git",
+    "url": "git+https://github.com/antfu/pnpm-workspace-utils.git",
     "directory": "packages/eslint-plugin-pnpm"
   },
-  "bugs": "https://github.com/antfu/eslint-plugin-pnpm/issues",
+  "bugs": "https://github.com/antfu/pnpm-workspace-utils/issues",
   "keywords": [
     "eslint-plugin",
     "pnpm"
