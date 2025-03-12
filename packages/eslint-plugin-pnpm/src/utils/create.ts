@@ -2,7 +2,7 @@ import type { RuleListener, RuleWithMeta, RuleWithMetaAndName } from '@typescrip
 import type { RuleContext } from '@typescript-eslint/utils/ts-eslint'
 import type { Rule } from 'eslint'
 
-const blobUrl = 'https://github.com/antfu/eslint-plugin-pnpm/blob/main/src/rules/'
+const blobUrl = 'https://github.com/antfu/pnpm-workspace-utils/tree/main/packages/eslint-plugin-pnpm/src/rules/'
 
 export type RuleModule<
   T extends readonly unknown[],
@@ -72,7 +72,7 @@ function createRule<
 }
 
 export const createEslintRule = RuleCreator(
-  ruleName => `${blobUrl}${ruleName}.test.ts`,
+  ruleName => `${blobUrl}${ruleName.startsWith('json-') ? `json/${ruleName}` : `yaml/${ruleName}`}.test.ts`,
 ) as any as <TOptions extends readonly unknown[], TMessageIds extends string>({ name, meta, ...rule }: Readonly<RuleWithMetaAndName<TOptions, TMessageIds>>) => RuleModule<TOptions>
 
 const warned = new Set<string>()
