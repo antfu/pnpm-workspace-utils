@@ -8,7 +8,7 @@ export interface PnpmWorkspaceYamlSchema {
 }
 
 export interface PnpmWorkspaceYaml {
-  document: Document.Parsed
+  getDocument: () => Document.Parsed
   setContent: (content: string) => void
   hasChanged: () => boolean
   toJSON: () => PnpmWorkspaceYamlSchema
@@ -170,7 +170,7 @@ export function parsePnpmWorkspaceYaml(content: string): PnpmWorkspaceYaml {
   }
 
   return {
-    get document() {
+    getDocument() {
       return document
     },
     setContent,

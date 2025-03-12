@@ -5,6 +5,7 @@ import { run as _run } from 'eslint-vitest-rule-tester'
 import jsoncParser from 'jsonc-eslint-parser'
 import { parsePnpmWorkspaceYaml } from 'pnpm-workspace-yaml'
 import { vi } from 'vitest'
+import yamlParser from 'yaml-eslint-parser'
 // @ts-expect-error mocked function
 import { _getWorkspace, _reset } from './_read'
 
@@ -13,6 +14,7 @@ vi.mock('../utils/_read', () => {
   return {
     readPnpmWorkspace: (): PnpmWorkspaceYamlExtended => {
       return {
+        filepath: 'pnpm-workspace.yaml',
         ...workspace,
         hasQueue: () => false,
         queueChange: (fn) => {
@@ -35,9 +37,16 @@ export function getMockedWorkspace(): PnpmWorkspaceYamlExtended {
   return _getWorkspace()
 }
 
-export function run(options: TestCasesOptions & RuleTesterInitOptions): void {
+export function runJson(options: TestCasesOptions & RuleTesterInitOptions): void {
   _run({
     parser: jsoncParser as any,
+    ...options,
+  })
+}
+
+export function runYaml(options: TestCasesOptions & RuleTesterInitOptions): void {
+  _run({
+    parser: yamlParser as any,
     ...options,
   })
 }

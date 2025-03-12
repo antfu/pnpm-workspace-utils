@@ -16,7 +16,6 @@
     "@antfu/eslint-config": "catalog:dev",
     "@antfu/ni": "catalog:dev",
     "@antfu/utils": "catalog:dev",
-    "@types/js-yaml": "catalog:dev",
     "@types/node": "catalog:dev",
     "@typescript-eslint/utils": "catalog:dev",
     "bumpp": "catalog:dev",
@@ -24,7 +23,6 @@
     "eslint-plugin-format": "catalog:dev",
     "eslint-vitest-rule-tester": "catalog:dev",
     "jiti": "catalog:dev",
-    "js-yaml": "catalog:test",
     "jsonc-eslint-parser": "catalog:prod",
     "lint-staged": "catalog:dev",
     "simple-git-hooks": "catalog:dev",
@@ -34,7 +32,9 @@
     "unbuild": "catalog:dev",
     "vite": "catalog:dev",
     "vitest": "catalog:test",
-    "vitest-package-exports": "catalog:test"
+    "vitest-package-exports": "catalog:test",
+    "yaml": "catalog:prod",
+    "yaml-eslint-parser": "catalog:prod"
   },
   "simple-git-hooks": {
     "pre-commit": "pnpm lint-staged"

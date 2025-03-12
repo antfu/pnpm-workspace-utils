@@ -5,6 +5,7 @@ import { findUpSync } from 'find-up-simple'
 import { parsePnpmWorkspaceYaml } from 'pnpm-workspace-yaml'
 
 export interface PnpmWorkspaceYamlExtended extends PnpmWorkspaceYaml {
+  filepath: string
   hasQueue: () => boolean
   queueChange: (fn: (doc: PnpmWorkspaceYaml) => void, order?: 'pre' | 'post') => void
 }
@@ -43,6 +44,7 @@ export function readPnpmWorkspace(): PnpmWorkspaceYamlExtended | undefined {
   }
 
   return {
+    filepath,
     ...workspace,
     hasQueue,
     queueChange,
