@@ -9,7 +9,6 @@ export type Options = [
     autofix?: boolean
     autoInsert?: boolean
     autoInsertDefaultSpecifier?: string
-    enforceNoConflict?: boolean
     fields?: string[]
   },
 ]
@@ -75,7 +74,6 @@ export default createEslintRule<Options, MessageIds>({
       autoInsert = true,
       autofix = true,
       autoInsertDefaultSpecifier = '^0.0.0',
-      enforceNoConflict = true,
       fields = DEFAULT_FIELDS,
     } = options || {}
 
@@ -106,12 +104,7 @@ export default createEslintRule<Options, MessageIds>({
                   // In a case this might conflicts with the `enforce-catalog` rule,
                   // we set pre to have lower priority
                   workspace.queueChange(() => {
-                    if (enforceNoConflict) {
-                      workspace.setPackage(catalog, packageName, autoInsertDefaultSpecifier)
-                    }
-                    else {
-                      workspace.setPackageNoConflicts(catalog, packageName, autoInsertDefaultSpecifier)
-                    }
+                    workspace.setPackage(catalog, packageName, autoInsertDefaultSpecifier)
                   }, 'pre')
                 }
                 return fixer.replaceText(

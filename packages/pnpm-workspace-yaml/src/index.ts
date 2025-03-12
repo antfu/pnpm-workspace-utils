@@ -22,7 +22,18 @@ export interface PnpmWorkspaceYaml {
    * Set a package to catalog only when the version matches, otherwise create a conflicts catalog
    */
   setPackageNoConflicts: (catalog: 'default' | (string & {}), packageName: string, specifier: string) => void
+  /**
+   * Get all catalogs for a package
+   */
   getPackageCatalogs: (packageName: string) => string[]
+  /**
+   * Check if the specifier has conflicts with the existing specifier in the catalog
+   */
+  hasSpecifierConflicts: (catalog: 'default' | (string & {}), packageName: string, specifier: string) => {
+    conflicts: boolean
+    newCatalogName: string
+    existingSpecifier?: string
+  }
 }
 
 /**
@@ -90,91 +101,44 @@ export function parsePnpmWorkspaceYaml(content: string): PnpmWorkspaceYaml {
     }
   }
 
-  function setPackageNoConflicts(catalogName: string, packageName: string, specifier: string): void {
-    // Check if the package already exists in any catalog
+  function hasSpecifierConflicts(catalogName: string, packageName: string, specifier: string): {
+    conflicts: boolean
+    newCatalogName: string
+    existingSpecifier?: string
+  } {
     const data = document.toJSON() || {}
     const existingSpecifier = catalogName === 'default'
       ? data.catalog?.[packageName]
       : data.catalogs?.[catalogName]?.[packageName]
-
-    const prefix = 'conflicts_'
-
-    // If the package exists with the same version, do nothing
     if (existingSpecifier === specifier) {
-      return
+      return {
+        conflicts: false,
+        newCatalogName: catalogName,
+        existingSpecifier,
+      }
     }
-
-    // If the package exists with a different version, create a new version-specific catalog
     if (existingSpecifier) {
-      // Convert version specifier to a valid suffix for the catalog name
-      // Replace special characters:
-      // ^ -> h (hat)
-      // ~ -> t (tilde)
-      // . -> _ (underscore)
-      // < -> l (less than)
-      // > -> g (greater than)
-      // = -> e (equals)
-      // * -> s (star)
-      // @ -> a (at)
-      // | -> p (pipe)
-      // & -> n (and)
-      // - -> m (minus)
-      // + -> u (plus)
-      // space -> _ (underscore)
-      const versionSuffix = specifier
-        .replace(/\^/g, 'h')
-        .replace(/~/g, 't')
-        .replace(/\./g, '_')
-        .replace(/</g, 'l')
-        .replace(/>/g, 'g')
-        .replace(/=/g, 'e')
-        .replace(/\*/g, 's')
-        .replace(/@/g, 'a')
-        .replace(/\|/g, 'p')
-        .replace(/&/g, 'n')
-        .replace(/-/g, 'm')
-        .replace(/\+/g, 'u')
-        .replace(/\s/g, '_')
-
+      const versionSuffix = normalizeCatalogName(specifier)
       // For default catalog, we need to create a new named catalog
-      if (catalogName === 'default') {
-        // Create a new catalog name based on the package and version
-        const newCatalogName = `${prefix}${packageName}_${versionSuffix}`
+      const newCatalogName = catalogName === 'default'
+        ? `conflicts_${packageName}_${versionSuffix}`
+        : `conflicts_${catalogName}_${versionSuffix}`
 
-        // Check if this catalog already exists
-        if (data.catalogs?.[newCatalogName]) {
-          // If it exists, just add the package to it
-          setPath(['catalogs', newCatalogName, packageName], specifier)
-        }
-        else {
-          // Otherwise, create a new version-specific catalog
-          setPath(['catalogs', newCatalogName, packageName], specifier)
-        }
-      }
-      else {
-        // For named catalogs, create a version-specific catalog
-        const newCatalogName = `${prefix}${catalogName}_${versionSuffix}`
-
-        // Check if this catalog already exists
-        if (data.catalogs?.[newCatalogName]) {
-          // If it exists, just add the package to it
-          setPath(['catalogs', newCatalogName, packageName], specifier)
-        }
-        else {
-          // Otherwise, create a new version-specific catalog
-          setPath(['catalogs', newCatalogName, packageName], specifier)
-        }
+      return {
+        conflicts: true,
+        existingSpecifier,
+        newCatalogName,
       }
     }
-    else {
-      // If the package doesn't exist in this catalog, add it normally
-      if (catalogName === 'default') {
-        setPath(['catalog', packageName], specifier)
-      }
-      else {
-        setPath(['catalogs', catalogName, packageName], specifier)
-      }
+    return {
+      conflicts: false,
+      newCatalogName: catalogName,
     }
+  }
+
+  function setPackageNoConflicts(catalogName: string, packageName: string, specifier: string): void {
+    const { newCatalogName } = hasSpecifierConflicts(catalogName, packageName, specifier)
+    setPackage(newCatalogName, packageName, specifier)
   }
 
   function setPackage(catalogName: string, packageName: string, specifier: string): void {
@@ -224,6 +188,7 @@ export function parsePnpmWorkspaceYaml(content: string): PnpmWorkspaceYaml {
     setPackage,
     setPackageNoConflicts,
     getPackageCatalogs,
+    hasSpecifierConflicts,
   }
 }
 
@@ -242,4 +207,36 @@ function findAnchor(doc: Document, alias: Alias): Scalar<string> | undefined {
   })
 
   return anchor
+}
+
+function normalizeCatalogName(name: string): string {
+  // Convert version specifier to a valid suffix for the catalog name
+  // Replace special characters:
+  // ^ -> h (hat)
+  // ~ -> t (tilde)
+  // . -> _ (underscore)
+  // < -> l (less than)
+  // > -> g (greater than)
+  // = -> e (equals)
+  // * -> s (star)
+  // @ -> a (at)
+  // | -> p (pipe)
+  // & -> n (and)
+  // - -> m (minus)
+  // + -> u (plus)
+  // space -> _ (underscore)
+  return name
+    .replace(/\^/g, 'h')
+    .replace(/~/g, 't')
+    .replace(/\./g, '_')
+    .replace(/</g, 'l')
+    .replace(/>/g, 'g')
+    .replace(/=/g, 'e')
+    .replace(/\*/g, 's')
+    .replace(/@/g, 'a')
+    .replace(/\|/g, 'p')
+    .replace(/&/g, 'n')
+    .replace(/-/g, 'm')
+    .replace(/\+/g, 'u')
+    .replace(/\s/g, '_')
 }

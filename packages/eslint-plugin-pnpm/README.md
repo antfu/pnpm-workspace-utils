@@ -8,8 +8,7 @@
 
 ESLint plugin to enforce and auto-fix pnpm catalogs.
 
-> [!IMPORTANT]
-> This plugin is still in heavy development and the API is not stable. Pin your version on use.
+This plugin applies to `package.json` and requires [`jsonc-eslint-parser`](https://github.com/ota-meshi/jsonc-eslint-parser) to be used as parser.
 
 ## Setup
 
@@ -31,7 +30,7 @@ export default [
 ]
 ```
 
-### Advanced usage
+### Manual Configuration
 
 ```js
 // eslint.config.mjs
@@ -55,8 +54,8 @@ export default [
       pnpm: pluginPnpm,
     },
     rules: {
-      'pnpm/enforce-catalog': ['error', { enforceNoConflict: true }],
-      'pnpm/valid-catalog': ['error', { enforceNoConflict: true }],
+      'pnpm/enforce-catalog': 'error',
+      'pnpm/valid-catalog': 'error',
       'pnpm/prefer-workspace-settings': 'error',
     },
   },

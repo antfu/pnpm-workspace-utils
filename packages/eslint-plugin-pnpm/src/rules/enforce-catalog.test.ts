@@ -32,7 +32,7 @@ const invalids: InvalidTestCase[] = [
     errors: [
       { messageId: 'expectCatalog' },
     ],
-    output: async (value) => {
+    async  output(value) {
       expect(value)
         .toMatchInlineSnapshot(`
           "{
@@ -51,6 +51,106 @@ const invalids: InvalidTestCase[] = [
         .toMatchInlineSnapshot(`
           "catalog:
             react: ^18.2.0
+          "
+        `)
+    },
+  },
+  {
+    description: 'Version conflicts with new catalog',
+    filename: 'package.json',
+    code: JSON.stringify({
+      dependencies: {
+        react: '^18.2.0',
+      },
+      devDependencies: {
+        'react-native': '^5.0.0',
+      },
+    }, null, 2),
+    errors: [
+      { messageId: 'expectCatalog' },
+      { messageId: 'expectCatalog' },
+    ],
+    async before() {
+      const workspace = getMockedWorkspace()
+      workspace.setContent(`
+        catalog:
+          react: ^18.2.0
+          react-native: ^0.74.0
+      `)
+    },
+    async output(value) {
+      expect(value)
+        .toMatchInlineSnapshot(`
+          "{
+            "dependencies": {
+              "react": "catalog:"
+            },
+            "devDependencies": {
+              "react-native": "catalog:conflicts_react-native_h5_0_0"
+            }
+          }"
+        `)
+
+      const workspace = getMockedWorkspace()
+      expect(workspace.toString())
+        .toMatchInlineSnapshot(`
+          "catalog:
+            react: ^18.2.0
+            react-native: ^0.74.0
+          catalogs:
+            conflicts_react-native_h5_0_0:
+              react-native: ^5.0.0
+          "
+        `)
+    },
+  },
+  {
+    description: 'Version conflicts with overrides',
+    filename: 'package.json',
+    code: JSON.stringify({
+      dependencies: {
+        react: '^18.2.0',
+      },
+      devDependencies: {
+        'react-native': '^5.0.0',
+      },
+    }, null, 2),
+    options: [
+      {
+        conflicts: 'overrides',
+      },
+    ],
+    errors: [
+      { messageId: 'expectCatalog' },
+      { messageId: 'expectCatalog' },
+    ],
+    async before() {
+      const workspace = getMockedWorkspace()
+      workspace.setContent(`
+        catalog:
+          react: ^18.2.0
+          react-native: ^0.74.0
+      `)
+    },
+    async output(value) {
+      expect(value)
+        .toMatchInlineSnapshot(`
+          "{
+            "dependencies": {
+              "react": "catalog:"
+            },
+            "devDependencies": {
+              "react-native": "catalog:"
+            }
+          }"
+        `)
+
+      const workspace = getMockedWorkspace()
+      expect(workspace.toString())
+        .toMatchInlineSnapshot(`
+          "catalog:
+            react: ^18.2.0
+            react-native: ^5.0.0
           "
         `)
     },
