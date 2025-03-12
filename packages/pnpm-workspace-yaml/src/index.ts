@@ -3,6 +3,7 @@ import { isAlias, Pair, parseDocument, visit } from 'yaml'
 
 export interface PnpmWorkspaceYamlSchema {
   packages?: string[]
+  overrides?: Record<string, string>
   catalog?: Record<string, string>
   catalogs?: Record<string, Record<string, string>>
 }

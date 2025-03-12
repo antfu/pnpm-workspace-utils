@@ -20,6 +20,20 @@ const valids: ValidTestCase[] = [
       },
     }),
   },
+  {
+    filename: 'pnpm-workspace.yaml',
+    code: yaml.stringify({
+      packages: null,
+      overrides: {
+        foo: 'catalog:prod',
+      },
+      catalogs: {
+        prod: {
+          foo: '*',
+        },
+      },
+    }),
+  },
 ]
 
 const invalids: InvalidTestCase[] = [
@@ -48,6 +62,23 @@ const invalids: InvalidTestCase[] = [
         data: { catalogItem: 'react:react' },
       },
     ],
+  },
+  {
+    filename: 'pnpm-workspace.yaml',
+    code: yaml.stringify({
+      packages: null,
+      overrides: {
+        foo: 'catalog:prod',
+        bar: '*',
+      },
+      catalogs: {
+        prod: {
+          foo: '*',
+          bar: '*',
+        },
+      },
+    }),
+    errors: 1,
   },
 ]
 

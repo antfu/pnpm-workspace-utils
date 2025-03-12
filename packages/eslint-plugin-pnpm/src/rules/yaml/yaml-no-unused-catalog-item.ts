@@ -58,6 +58,14 @@ export default createEslintRule<Options, MessageIds>({
       }
     }
 
+    // Referenced by `overrides` in `pnpm-workspace.yaml`
+    for (const [packageName, specifier] of Object.entries(parsed.overrides || {})) {
+      if (specifier.startsWith('catalog:')) {
+        const catalog = specifier.slice(8) || 'default'
+        entries.delete(`${packageName}:${catalog}`)
+      }
+    }
+
     if (entries.size === 0)
       return {}
 
