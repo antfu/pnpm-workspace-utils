@@ -12,27 +12,36 @@ export function getPackageJsonRootNode(context: RuleContext<any, any>): AST.JSON
     return root.expression
 }
 
-export function* iterateDependencies(context: RuleContext<any, any>): Generator<
-  {
-    packageName: string
-    specifier: string
-    property: AST.JSONProperty
-  },
-  void,
-  unknown
-> {
+export function* iterateDependencies(
+  context: RuleContext<any, any>,
+  fields: string[],
+): Generator<
+    {
+      packageName: string
+      specifier: string
+      property: AST.JSONProperty
+    },
+    void,
+    unknown
+  > {
   const root = getPackageJsonRootNode(context)
   if (!root)
     return
 
-  for (const type of ['dependencies', 'devDependencies']) {
-    const node = root.properties.find(property => property.key.type === 'JSONLiteral' && property.key.value === type)
-    if (!node)
-      continue
-    if (node.value.type !== 'JSONObjectExpression')
-      continue
+  for (const fieldName of fields) {
+    const path = fieldName.split('.')
 
-    for (const property of node.value.properties) {
+    let node: AST.JSONObjectExpression | undefined = root
+    for (let i = 0; i < path.length; i++) {
+      const item = node.properties.find(property => property.key.type === 'JSONLiteral' && property.key.value === path[i])
+      if (!item?.value)
+        continue
+      if (item.value.type !== 'JSONObjectExpression')
+        continue
+      node = item.value as AST.JSONObjectExpression
+    }
+
+    for (const property of node.properties) {
       if (property.value.type !== 'JSONLiteral' || property.key.type !== 'JSONLiteral')
         continue
       if (typeof property.value.value !== 'string')

@@ -10,7 +10,13 @@ export type Options = [
     autofix?: boolean
     defaultCatalog?: string
     reuseExistingCatalog?: boolean
+    fields?: string[]
   },
+]
+
+const DEFAULT_FIELDS = [
+  'dependencies',
+  'devDependencies',
 ]
 
 export default createEslintRule<Options, MessageIds>({
@@ -46,6 +52,12 @@ export default createEslintRule<Options, MessageIds>({
             description: 'Whether to reuse existing catalog when moving version to catalog with autofix',
             default: true,
           },
+          fields: {
+            type: 'array',
+            description: 'Fields to check for catalog',
+            items: { type: 'string' },
+            default: DEFAULT_FIELDS,
+          },
         },
         additionalProperties: false,
       },
@@ -61,9 +73,10 @@ export default createEslintRule<Options, MessageIds>({
       defaultCatalog = 'default',
       autofix = true,
       reuseExistingCatalog = true,
+      fields = DEFAULT_FIELDS,
     } = options || {}
 
-    for (const { packageName, specifier, property } of iterateDependencies(context)) {
+    for (const { packageName, specifier, property } of iterateDependencies(context, fields)) {
       if (specifier.startsWith('catalog:'))
         continue
       if (allowedProtocols?.some(p => specifier.startsWith(p)))

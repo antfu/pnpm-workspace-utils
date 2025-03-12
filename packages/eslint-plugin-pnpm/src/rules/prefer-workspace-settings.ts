@@ -22,7 +22,11 @@ export default createEslintRule<Options, MessageIds>({
       {
         type: 'object',
         properties: {
-          autofix: { type: 'boolean' },
+          autofix: {
+            type: 'boolean',
+            description: 'Whether to autofix the linting error',
+            default: true,
+          },
         },
         additionalProperties: false,
       },
