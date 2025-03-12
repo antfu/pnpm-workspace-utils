@@ -34,12 +34,14 @@ export function* iterateDependencies(
     let node: AST.JSONObjectExpression | undefined = root
     for (let i = 0; i < path.length; i++) {
       const item = node.properties.find(property => property.key.type === 'JSONLiteral' && property.key.value === path[i])
-      if (!item?.value)
-        continue
-      if (item.value.type !== 'JSONObjectExpression')
-        continue
+      if (!item?.value || item.value.type !== 'JSONObjectExpression') {
+        node = undefined
+        break
+      }
       node = item.value as AST.JSONObjectExpression
     }
+    if (!node || node === root)
+      continue
 
     for (const property of node.properties) {
       if (property.value.type !== 'JSONLiteral' || property.key.type !== 'JSONLiteral')

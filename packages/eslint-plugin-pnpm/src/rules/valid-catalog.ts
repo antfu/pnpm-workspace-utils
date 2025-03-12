@@ -50,6 +50,11 @@ export default createEslintRule<Options, MessageIds>({
             description: 'Whether to autofix the linting error',
             default: true,
           },
+          enforceNoConflict: {
+            type: 'boolean',
+            description: 'Whether to enforce no conflicts when adding packages to catalogs (will create version-specific catalogs)',
+            default: true,
+          },
           fields: {
             type: 'array',
             description: 'Fields to check for catalog',

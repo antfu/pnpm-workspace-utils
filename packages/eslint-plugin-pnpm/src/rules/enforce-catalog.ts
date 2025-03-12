@@ -2,6 +2,8 @@ import { createEslintRule } from '../utils/create'
 import { iterateDependencies } from '../utils/iterate'
 import { getPnpmWorkspace } from '../utils/workspace'
 
+export type ConflictStrategy = 'new-catalog' | 'overrides' | 'error'
+
 export const RULE_NAME = 'enforce-catalog'
 export type MessageIds = 'expectCatalog'
 export type Options = [
@@ -10,6 +12,7 @@ export type Options = [
     autofix?: boolean
     defaultCatalog?: string
     reuseExistingCatalog?: boolean
+    conflicts?: ConflictStrategy
     fields?: string[]
   },
 ]
@@ -41,7 +44,7 @@ export default createEslintRule<Options, MessageIds>({
           autofix: {
             type: 'boolean',
             description: 'Whether to autofix the linting error',
-            default: false,
+            default: true,
           },
           defaultCatalog: {
             type: 'string',
@@ -51,6 +54,12 @@ export default createEslintRule<Options, MessageIds>({
             type: 'boolean',
             description: 'Whether to reuse existing catalog when moving version to catalog with autofix',
             default: true,
+          },
+          conflicts: {
+            type: 'string',
+            description: 'Strategy to handle conflicts when adding packages to catalogs',
+            enum: ['new-catalog', 'overrides', 'error'],
+            default: 'new-catalog',
           },
           fields: {
             type: 'array',
@@ -67,12 +76,13 @@ export default createEslintRule<Options, MessageIds>({
     },
   },
   defaultOptions: [{}],
-  create(context, [options = {}]) {
+  create(context, [options]) {
     const {
       allowedProtocols = ['workspace', 'link', 'file'],
       defaultCatalog = 'default',
       autofix = true,
       reuseExistingCatalog = true,
+      conflicts = 'new-catalog',
       fields = DEFAULT_FIELDS,
     } = options || {}
 
@@ -86,6 +96,26 @@ export default createEslintRule<Options, MessageIds>({
       if (!workspace)
         return {}
 
+      let targetCatalog = reuseExistingCatalog
+        ? (workspace.getPackageCatalogs(packageName)[0] || defaultCatalog)
+        : defaultCatalog
+
+      const resolvedConflicts = workspace.hasSpecifierConflicts(
+        targetCatalog,
+        packageName,
+        specifier,
+      )
+
+      let shouldFix = autofix
+      if (conflicts === 'error') {
+        if (resolvedConflicts.conflicts) {
+          shouldFix = false
+        }
+      }
+      if (conflicts === 'new-catalog' && resolvedConflicts.conflicts) {
+        targetCatalog = resolvedConflicts.newCatalogName
+      }
+
       context.report({
         node: property.value as any,
         messageId: 'expectCatalog',
@@ -93,19 +123,17 @@ export default createEslintRule<Options, MessageIds>({
           specifier,
           packageName,
         },
-        fix: autofix
+        fix: shouldFix
           ? (fixer) => {
-              const catalog = reuseExistingCatalog
-                ? (workspace.getPackageCatalogs(packageName)[0] || defaultCatalog)
-                : defaultCatalog
-
               workspace.queueChange(() => {
-                workspace.setPackage(catalog, packageName, specifier)
+                workspace.setPackage(targetCatalog, packageName, specifier)
               })
 
               return fixer.replaceText(
                 property.value as any,
-                catalog === 'default' ? JSON.stringify('catalog:') : JSON.stringify(`catalog:${catalog}`),
+                targetCatalog === 'default'
+                  ? JSON.stringify('catalog:')
+                  : JSON.stringify(`catalog:${targetCatalog}`),
               )
             }
           : undefined,
