@@ -5,33 +5,33 @@ packages:
   - examples/*
 catalogs:
   dev:
-    '@antfu/eslint-config': ^4.9.0
-    '@antfu/ni': ^24.1.0
-    '@antfu/utils': ^9.1.0
-    '@types/node': ^22.13.10
-    '@typescript-eslint/parser': ^8.26.1
-    '@typescript-eslint/utils': ^8.26.1
-    bumpp: ^10.1.0
-    eslint: ^9.22.0
+    '@antfu/eslint-config': ^4.16.2
+    '@antfu/ni': ^25.0.0
+    '@antfu/utils': ^9.2.0
+    '@types/node': ^24.0.10
+    '@typescript-eslint/parser': ^8.35.1
+    '@typescript-eslint/utils': ^8.35.1
+    bumpp: ^10.2.0
+    eslint: ^9.30.1
     eslint-plugin-format: ^1.0.1
-    eslint-vitest-rule-tester: ^2.0.0
+    eslint-vitest-rule-tester: ^2.2.0
     jiti: ^2.4.2
-    lint-staged: ^15.4.3
-    simple-git-hooks: ^2.11.1
-    tsx: ^4.19.3
-    typescript: ^5.8.2
+    lint-staged: ^16.1.2
+    simple-git-hooks: ^2.13.0
+    tsx: ^4.20.3
+    typescript: ^5.8.3
     unbuild: ^3.5.0
-    vite: ^6.2.1
+    vite: ^7.0.0
   prod:
     find-up-simple: ^1.0.1
     jsonc-eslint-parser: ^2.4.0
     pathe: ^2.0.3
-    tinyglobby: ^0.2.12
-    yaml: ^2.7.0
+    tinyglobby: ^0.2.14
+    yaml: ^2.8.0
     yaml-eslint-parser: ^1.3.0
   test:
-    tinyexec: ^0.3.2
-    vitest: ^3.0.8
+    tinyexec: ^1.0.1
+    vitest: ^3.2.4
     vitest-package-exports: ^0.1.1
 onlyBuiltDependencies:
   - esbuild
