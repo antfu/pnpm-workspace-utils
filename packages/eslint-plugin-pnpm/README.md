@@ -82,6 +82,12 @@ export default [
 ]
 ```
 
+## Settings
+
+| Name                      | Description                                                 | Type                  | Default   |
+| ------------------------- | ----------------------------------------------------------- | --------------------- | --------- |
+| `onPnpmWorkspaceYamlMiss` | The action to take when `pnpm-workspace.yaml` is not found. | `'error' \| 'create'` | `'error'` |
+
 ## Sponsors
 
 <p align="center">
