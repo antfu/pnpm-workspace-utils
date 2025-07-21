@@ -40,7 +40,7 @@ export default createEslintRule<Options, MessageIds>({
     if (basename(context.filename) !== 'pnpm-workspace.yaml')
       return {}
 
-    const workspace = getPnpmWorkspace(context.filename)
+    const workspace = getPnpmWorkspace(context)
     if (!workspace || normalize(workspace.filepath) !== normalize(context.filename))
       return {}
 

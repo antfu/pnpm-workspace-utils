@@ -92,7 +92,7 @@ export default createEslintRule<Options, MessageIds>({
       if (allowedProtocols?.some(p => specifier.startsWith(p)))
         continue
 
-      const workspace = getPnpmWorkspace(context.filename)
+      const workspace = getPnpmWorkspace(context)
       if (!workspace)
         return {}
 

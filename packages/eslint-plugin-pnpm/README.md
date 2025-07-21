@@ -82,6 +82,12 @@ export default [
 ]
 ```
 
+## Settings
+
+| Name                  | Description                                                 | Type    | Default |
+| --------------------- | ----------------------------------------------------------- | ------- | ------- |
+| `ensureWorkspaceFile` | Whether to create `pnpm-workspace.yaml` if it doesn't exist | boolean | false   |
+
 ## Sponsors
 
 <p align="center">
