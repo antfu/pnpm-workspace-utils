@@ -9,11 +9,11 @@ export function getPnpmWorkspace(
   context: RuleContext<any, any>,
 ): PnpmWorkspaceYamlExtended | undefined {
   const sourcePath = context.filename
-  const onPnpmWorkspaceYamlMiss = context.settings.pnpm?.onPnpmWorkspaceYamlMiss
+  const ensureWorkspaceFile = context.settings.pnpm?.ensureWorkspaceFile
 
   let workspacePath = findPnpmWorkspace(sourcePath)
   if (!workspacePath) {
-    if (onPnpmWorkspaceYamlMiss === 'create')
+    if (ensureWorkspaceFile)
       workspacePath = createPnpmWorkspace(sourcePath)
     else
       throw new Error('pnpm-workspace.yaml not found')
