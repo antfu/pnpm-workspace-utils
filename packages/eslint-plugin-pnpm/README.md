@@ -8,7 +8,7 @@
 
 ESLint plugin to enforce and auto-fix pnpm catalogs.
 
-This plugin consist with two set of rules that applies to `package.json` and `pnpm-workspace.yaml` respectively.
+This plugin consists of two set of rules that applies to `package.json` and `pnpm-workspace.yaml` respectively.
 
 - [`json-` rules](./src/rules/json) applies to `package.json` and requires [`jsonc-eslint-parser`](https://github.com/ota-meshi/jsonc-eslint-parser) to be used as parser.
 - [`yaml-` rules](./src/rules/yaml) applies to `pnpm-workspace.yaml` and requires [`yaml-eslint-parser`](https://github.com/ota-meshi/yaml-eslint-parser) to be used as parser.

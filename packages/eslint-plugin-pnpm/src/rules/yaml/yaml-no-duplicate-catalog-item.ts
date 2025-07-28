@@ -16,7 +16,7 @@ export default createEslintRule<Options, MessageIds>({
   meta: {
     type: 'problem',
     docs: {
-      description: 'Disallow unused catalogs in `pnpm-workspace.yaml`',
+      description: 'Disallow duplicate catalog items in `pnpm-workspace.yaml`',
     },
     fixable: 'code',
     schema: [

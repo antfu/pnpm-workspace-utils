@@ -15,7 +15,7 @@ export default createEslintRule<Options, MessageIds>({
   meta: {
     type: 'layout',
     docs: {
-      description: 'Prefer having pnpm settings in `pnpm-workspace.yaml` instead of `package.json`. This would requires pnpm v10.6+, see https://github.com/orgs/pnpm/discussions/9037.',
+      description: 'Prefer having pnpm settings in `pnpm-workspace.yaml` instead of `package.json`. This requires pnpm v10.6+, see https://github.com/orgs/pnpm/discussions/9037.',
     },
     fixable: 'code',
     schema: [
