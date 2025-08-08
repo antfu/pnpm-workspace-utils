@@ -1,8 +1,7 @@
 # pnpm-workspace-utils
 
 > [!TIP]
-> 👀 Interested in pnpm catalogs? Recommend you read this post: [Categorize Your Dependencies
-Apr 28 · 8min](https://antfu.me/posts/categorize-deps) by Anthony.
+> 👀 Interested in pnpm catalogs? Recommend you read this post: [Categorize Your Dependencies](https://antfu.me/posts/categorize-deps) by Anthony.
 
 This is a monorepo consisting of two packages:
 
