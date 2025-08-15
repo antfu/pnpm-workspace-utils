@@ -58,9 +58,9 @@ catalogs:
       specifier: ^7.1.1
       version: 7.1.1
   prod:
-    find-up-simple:
-      specifier: ^1.0.1
-      version: 1.0.1
+    empathic:
+      specifier: ^2.0.0
+      version: 2.0.0
     jsonc-eslint-parser:
       specifier: ^2.4.0
       version: 2.4.0
@@ -160,12 +160,12 @@ importers:
 
   packages/eslint-plugin-pnpm:
     dependencies:
+      empathic:
+        specifier: catalog:prod
+        version: 2.0.0
       eslint:
         specifier: ^9.0.0
         version: 9.32.0(jiti@2.5.1)
-      find-up-simple:
-        specifier: catalog:prod
-        version: 1.0.1
       jsonc-eslint-parser:
         specifier: catalog:prod
         version: 2.4.0
@@ -1175,6 +1175,10 @@ packages:
 
   emoji-regex@10.4.0:
     resolution: {integrity: sha512-EC+0oUMY1Rqm4O6LLrgjtYDvcVYTy7chDnM4Q7030tP4Kwj3u/pR6gP9ygnp2CJMK5Gq+9Q2oqmrFJAz01DXjw==}
+
+  empathic@2.0.0:
+    resolution: {integrity: sha512-i6UzDscO/XfAcNYD75CfICkmfLedpyPDdozrLMmQc5ORaQcdMoc21OnlEylMIqI7U8eniKrPMxxtj8k0vhmJhA==}
+    engines: {node: '>=14'}
 
   enhanced-resolve@5.18.1:
     resolution: {integrity: sha512-ZSW3ma5GkcQBIpwZTSRAI8N71Uuwgs93IezB7mf7R60tC8ZbJideoDNKjHn2O9KIlx6rkGTTEk1xUCK2E1Y2Yg==}
@@ -3577,6 +3581,8 @@ snapshots:
   electron-to-chromium@1.5.178: {}
 
   emoji-regex@10.4.0: {}
+
+  empathic@2.0.0: {}
 
   enhanced-resolve@5.18.1:
     dependencies:

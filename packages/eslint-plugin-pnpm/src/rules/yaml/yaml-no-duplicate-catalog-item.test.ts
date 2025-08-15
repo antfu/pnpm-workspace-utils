@@ -12,7 +12,7 @@ const valids: ValidTestCase[] = [
       ],
       catalogs: {
         prod: {
-          'find-up-simple': '*',
+          empathic: '*',
         },
         dev: {
           '@typescript-eslint/parser': '*',

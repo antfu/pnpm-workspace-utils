@@ -52,7 +52,7 @@
     "eslint": "^9.0.0"
   },
   "dependencies": {
-    "find-up-simple": "catalog:prod",
+    "empathic": "catalog:prod",
     "jsonc-eslint-parser": "catalog:prod",
     "pathe": "catalog:prod",
     "pnpm-workspace-yaml": "workspace:*",

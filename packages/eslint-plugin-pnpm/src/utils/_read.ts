@@ -1,6 +1,6 @@
 import type { PnpmWorkspaceYaml } from 'pnpm-workspace-yaml'
 import fs from 'node:fs'
-import { findUpSync } from 'find-up-simple'
+import { up } from 'empathic/find'
 import { dirname, resolve } from 'pathe'
 import { parsePnpmWorkspaceYaml } from 'pnpm-workspace-yaml'
 
@@ -12,13 +12,13 @@ export interface PnpmWorkspaceYamlExtended extends PnpmWorkspaceYaml {
 }
 
 export function findPnpmWorkspace(sourceFile: string): string | undefined {
-  return findUpSync('pnpm-workspace.yaml', {
+  return up('pnpm-workspace.yaml', {
     cwd: dirname(sourceFile),
   })
 }
 
 export function createPnpmWorkspace(sourceFile: string): string {
-  const file = findUpSync('package.json', {
+  const file = up('package.json', {
     cwd: dirname(sourceFile),
   })
   if (!file)
