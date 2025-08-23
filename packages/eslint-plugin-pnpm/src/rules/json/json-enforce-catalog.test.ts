@@ -22,6 +22,50 @@ const invalids: InvalidTestCase[] = [
     filename: 'package.json',
     code: JSON.stringify({
       dependencies: {
+        vue: '^3.6.0',
+      },
+    }, null, 2),
+    errors: [
+      { messageId: 'expectCatalog' },
+    ],
+    options: {
+      defaultCatalog: 'default',
+    },
+    async before() {
+      const workspace = getMockedWorkspace()
+      workspace.setContent(`
+        catalogs:
+          default:
+            vue: ^3.6.0
+      `)
+    },
+    async output(value) {
+      expect(value)
+        .toMatchInlineSnapshot(`
+          "{
+            "dependencies": {
+              "vue": "catalog:"
+            }
+          }"
+        `)
+
+      const workspace = getMockedWorkspace()
+      expect(workspace.toString())
+        .toMatchInlineSnapshot(`
+          "catalogs:
+            default:
+              vue: ^3.6.0
+          "
+        `)
+    },
+    async after() {
+      getMockedWorkspace().setContent(``)
+    },
+  },
+  {
+    filename: 'package.json',
+    code: JSON.stringify({
+      dependencies: {
         'react-dom': 'catalog:react-dom',
         'react': '^18.2.0',
       },

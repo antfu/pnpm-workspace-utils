@@ -143,8 +143,9 @@ export function parsePnpmWorkspaceYaml(content: string): PnpmWorkspaceYaml {
   }
 
   function setPackage(catalogName: string, packageName: string, specifier: string): void {
+    const useCatalogsDefault = document.toJSON()?.catalogs?.default !== undefined
     // Simply set the package in the specified catalog, overriding any existing value
-    if (catalogName === 'default') {
+    if (catalogName === 'default' && !useCatalogsDefault) {
       setPath(['catalog', packageName], specifier)
     }
     else {
