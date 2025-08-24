@@ -55,7 +55,7 @@ export default createEslintRule<Options, MessageIds>({
 
     const catalogs = {
       ...json.catalogs,
-      default: json.catalog,
+      default: json.catalog ?? json.catalogs?.default,
     }
 
     const doc = workspace.getDocument()
@@ -69,7 +69,7 @@ export default createEslintRule<Options, MessageIds>({
 
         if (exists.has(key)) {
           const existingCatalog = exists.get(key)!
-          const node = doc.getIn(catalog === 'default' ? ['catalog', key] : ['catalogs', catalog, key], true)! as YAMLScalar
+          const node = doc.getIn(catalog === 'default' ? (json.catalog ? ['catalog', key] : ['catalogs', catalog, key]) : ['catalogs', catalog, key], true)! as YAMLScalar
           const start = context.sourceCode.getLocFromIndex(node.range![0])
           const end = context.sourceCode.getLocFromIndex(node.range![1])
           context.report({
