@@ -155,6 +155,51 @@ const invalids: InvalidTestCase[] = [
         `)
     },
   },
+  {
+    description: 'Ignores some packages',
+    filename: 'package.json',
+    code: JSON.stringify({
+      dependencies: {
+        react: '^18.2.0',
+      },
+      devDependencies: {
+        'react-native': '^5.0.0',
+        '@types/vscode': '^1.89.0',
+      },
+    }, null, 2),
+    options: [
+      {
+        ignores: ['@types/vscode'],
+      },
+    ],
+    errors: [
+      { messageId: 'expectCatalog' },
+      { messageId: 'expectCatalog' },
+    ],
+    async output(value) {
+      expect(value)
+        .toMatchInlineSnapshot(`
+          "{
+            "dependencies": {
+              "react": "catalog:"
+            },
+            "devDependencies": {
+              "react-native": "catalog:",
+              "@types/vscode": "^1.89.0"
+            }
+          }"
+        `)
+
+      const workspace = getMockedWorkspace()
+      expect(workspace.toString())
+        .toMatchInlineSnapshot(`
+          "catalog:
+            react: ^18.2.0
+            react-native: ^5.0.0
+          "
+        `)
+    },
+  },
 ]
 
 runJson({
