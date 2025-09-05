@@ -45,6 +45,28 @@ const invalids: InvalidTestCase[] = [
       },
     ],
   },
+  {
+    filename: 'pnpm-workspace.yaml',
+    code: yaml.stringify({
+      packages: [
+        'packages/*',
+      ],
+      catalogs: {
+        react: {
+          foo: '^18.2.0',
+        },
+        default: {
+          foo: 'bar',
+        },
+      },
+    }),
+    errors: [
+      {
+        messageId: 'duplicateCatalogItem',
+        data: { name: 'foo', currentCatalog: 'default', existingCatalog: 'react' },
+      },
+    ],
+  },
 ]
 
 runYaml({
