@@ -14,6 +14,7 @@ export type Options = [
     reuseExistingCatalog?: boolean
     conflicts?: ConflictStrategy
     fields?: string[]
+    ignores?: string[]
   },
 ]
 
@@ -67,6 +68,12 @@ export default createEslintRule<Options, MessageIds>({
             items: { type: 'string' },
             default: DEFAULT_FIELDS,
           },
+          ignores: {
+            type: 'array',
+            description: 'Ignore certain packages that require version specification',
+            items: { type: 'string' },
+            default: [],
+          },
         },
         additionalProperties: false,
       },
@@ -84,10 +91,11 @@ export default createEslintRule<Options, MessageIds>({
       reuseExistingCatalog = true,
       conflicts = 'new-catalog',
       fields = DEFAULT_FIELDS,
+      ignores = [],
     } = options || {}
 
     for (const { packageName, specifier, property } of iterateDependencies(context, fields)) {
-      if (specifier.startsWith('catalog:'))
+      if (specifier.startsWith('catalog:') || ignores.includes(packageName))
         continue
       if (allowedProtocols?.some(p => specifier.startsWith(p)))
         continue
