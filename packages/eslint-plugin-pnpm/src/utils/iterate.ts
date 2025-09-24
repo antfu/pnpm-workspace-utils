@@ -16,14 +16,14 @@ export function* iterateDependencies(
   context: RuleContext<any, any>,
   fields: string[],
 ): Generator<
-    {
-      packageName: string
-      specifier: string
-      property: AST.JSONProperty
-    },
-    void,
-    unknown
-  > {
+  {
+    packageName: string
+    specifier: string
+    property: AST.JSONProperty
+  },
+  void,
+  unknown
+> {
   const root = getPackageJsonRootNode(context)
   if (!root)
     return
