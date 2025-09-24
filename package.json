@@ -7,7 +7,7 @@
     "build": "pnpm -r run build",
     "stub": "pnpm -r run stub",
     "lint": "eslint .",
-    "release": "bumpp -r && pnpm -r publish",
+    "release": "bumpp -r",
     "test": "vitest",
     "typecheck": "tsc --noEmit",
     "prepare": "simple-git-hooks"
