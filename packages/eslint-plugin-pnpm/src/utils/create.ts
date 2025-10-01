@@ -28,6 +28,7 @@ function RuleCreator(urlCreator: (name: string) => string) {
     ...rule
   }: Readonly<RuleWithMetaAndName<TOptions, TMessageIds>>): RuleModule<TOptions> {
     return createRule<TOptions, TMessageIds>({
+      name,
       meta: {
         ...meta,
         docs: {
