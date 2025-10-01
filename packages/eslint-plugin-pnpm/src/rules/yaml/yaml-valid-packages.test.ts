@@ -12,6 +12,17 @@ const valids: ValidTestCase[] = [
       ],
     }),
   },
+  // Patterns with trailing slash
+  {
+    filename: 'pnpm-workspace.yaml',
+    code: yaml.stringify({
+      packages: [
+        'packages/*/',
+      ],
+    }),
+  },
+
+  // Direct path
   {
     filename: 'pnpm-workspace.yaml',
     code: yaml.stringify({

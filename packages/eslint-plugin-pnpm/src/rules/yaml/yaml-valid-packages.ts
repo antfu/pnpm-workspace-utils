@@ -1,6 +1,6 @@
 import type { RuleContext } from '@typescript-eslint/utils/ts-eslint'
 import type { Scalar as YAMLScalar, YAMLSeq } from 'yaml'
-import { basename, dirname, normalize, resolve } from 'pathe'
+import { basename, dirname, join, normalize, resolve } from 'pathe'
 import { globSync } from 'tinyglobby'
 import { createEslintRule } from '../../utils/create'
 import { getPnpmWorkspace } from '../../utils/workspace'
@@ -74,7 +74,7 @@ export default createEslintRule<Options, MessageIds>({
         continue
       }
 
-      const globMatches = globSync(`${pattern}/package.json`, {
+      const globMatches = globSync(join(pattern, 'package.json'), {
         cwd: root,
         dot: false,
         ignore: ['**/node_modules/**', '**/dist/**', '**/build/**'],
