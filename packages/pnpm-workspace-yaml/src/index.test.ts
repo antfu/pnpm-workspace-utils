@@ -234,6 +234,23 @@ describe('setPackageNoConflicts', () => {
     `)
   })
 
+  it('should set package in catalogs:default', () => {
+    const input = `
+  catalogs:
+    default:
+      bar: ^1.2.3
+  `
+    const workspace = parsePnpmWorkspaceYaml(input)
+    workspace.setPackageNoConflicts('default', 'foo', '^1.0.0')
+    expect(workspace.toString()).toMatchInlineSnapshot(`
+      "catalogs:
+        default:
+          bar: ^1.2.3
+          foo: ^1.0.0
+      "
+    `)
+  })
+
   it('should set package in named catalog', () => {
     const workspace = parsePnpmWorkspaceYaml('')
     workspace.setPackageNoConflicts('dev', 'foo', '^1.0.0')
