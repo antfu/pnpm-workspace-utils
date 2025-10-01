@@ -46,6 +46,7 @@ const configsYaml: Linter.Config[] = [
     rules: {
       'pnpm/yaml-no-unused-catalog-item': 'error',
       'pnpm/yaml-no-duplicate-catalog-item': 'error',
+      'pnpm/yaml-valid-packages': 'error',
     },
   },
 ]
