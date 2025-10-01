@@ -32,7 +32,7 @@ export default createEslintRule<Options, MessageIds>({
       },
     ],
     messages: {
-      duplicateCatalogItem: 'Catalog item "{{name}}" is already defined in the "{{existingCatalog}}" catalog. You may want to remove one of them.',
+      duplicateCatalogItem: 'Catalog item "{{name}}" with version "{{version}}" is already defined in the "{{existingCatalog}}" catalog. You may want to remove one of them.',
     },
   },
   defaultOptions: [{}],
@@ -51,7 +51,7 @@ export default createEslintRule<Options, MessageIds>({
 
     workspace.setContent(context.sourceCode.text)
     const json = workspace.toJSON() || {}
-    const exists = new Map<string, string>()
+    const exists = new Map<string, { catalog: string, version: string }>()
 
     const catalogs = {
       ...json.catalogs,
@@ -63,30 +63,34 @@ export default createEslintRule<Options, MessageIds>({
       if (!object)
         continue
 
-      for (const key of Object.keys(object)) {
+      for (const [key, version] of Object.entries(object)) {
         if (allow.includes(key))
           continue
 
-        if (exists.has(key)) {
-          const existingCatalog = exists.get(key)!
-          const node = doc.getIn(catalog === 'default' ? (json.catalog ? ['catalog', key] : ['catalogs', catalog, key]) : ['catalogs', catalog, key], true)! as YAMLScalar
-          const start = context.sourceCode.getLocFromIndex(node.range![0])
-          const end = context.sourceCode.getLocFromIndex(node.range![1])
-          context.report({
-            loc: {
-              start,
-              end,
-            },
-            messageId: 'duplicateCatalogItem',
-            data: {
-              name: key,
-              currentCatalog: catalog,
-              existingCatalog,
-            },
-          })
+        const existing = exists.get(key)
+        if (existing) {
+          // Only report if the versions are identical (redundant duplicate)
+          if (existing.version === version) {
+            const node = doc.getIn(catalog === 'default' ? (json.catalog ? ['catalog', key] : ['catalogs', catalog, key]) : ['catalogs', catalog, key], true)! as YAMLScalar
+            const start = context.sourceCode.getLocFromIndex(node.range![0])
+            const end = context.sourceCode.getLocFromIndex(node.range![1])
+            context.report({
+              loc: {
+                start,
+                end,
+              },
+              messageId: 'duplicateCatalogItem',
+              data: {
+                name: key,
+                version: String(version),
+                currentCatalog: catalog,
+                existingCatalog: existing.catalog,
+              },
+            })
+          }
         }
         else {
-          exists.set(key, catalog)
+          exists.set(key, { catalog, version: String(version) })
         }
       }
     }

@@ -20,31 +20,44 @@ const valids: ValidTestCase[] = [
       },
     }),
   },
+  // Same package in different catalogs with different versions (valid use case)
+  {
+    filename: 'pnpm-workspace.yaml',
+    code: yaml.stringify({
+      packages: [
+        'packages/*',
+      ],
+      catalogs: {
+        react7: {
+          react: '^7',
+        },
+        react8: {
+          react: '^8',
+        },
+      },
+    }),
+  },
+  // Different version ranges (both valid use cases)
+  {
+    filename: 'pnpm-workspace.yaml',
+    code: yaml.stringify({
+      packages: [
+        'packages/*',
+      ],
+      catalogs: {
+        minor: {
+          react: '^18.0.0',
+        },
+        patch: {
+          react: '~18.2.0',
+        },
+      },
+    }),
+  },
 ]
 
 const invalids: InvalidTestCase[] = [
-  {
-    filename: 'pnpm-workspace.yaml',
-    code: yaml.stringify({
-      packages: [
-        'packages/*',
-      ],
-      catalog: {
-        foo: 'bar',
-      },
-      catalogs: {
-        react: {
-          foo: '^18.2.0',
-        },
-      },
-    }),
-    errors: [
-      {
-        messageId: 'duplicateCatalogItem',
-        data: { name: 'foo', currentCatalog: 'default', existingCatalog: 'react' },
-      },
-    ],
-  },
+  // Same package with identical version in multiple catalogs (redundant)
   {
     filename: 'pnpm-workspace.yaml',
     code: yaml.stringify({
@@ -52,18 +65,18 @@ const invalids: InvalidTestCase[] = [
         'packages/*',
       ],
       catalogs: {
-        react: {
-          foo: '^18.2.0',
+        prod: {
+          react: '^18.2.0',
         },
-        default: {
-          foo: 'bar',
+        dev: {
+          react: '^18.2.0',
         },
       },
     }),
     errors: [
       {
         messageId: 'duplicateCatalogItem',
-        data: { name: 'foo', currentCatalog: 'default', existingCatalog: 'react' },
+        data: { name: 'react', version: '^18.2.0', currentCatalog: 'dev', existingCatalog: 'prod' },
       },
     ],
   },
