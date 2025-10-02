@@ -20,7 +20,7 @@ const valids: ValidTestCase[] = [
       },
     }),
   },
-  // Same package in different catalogs with different versions (valid use case)
+  // Same package in different catalogs with different versions (valid with exact-version mode)
   {
     filename: 'pnpm-workspace.yaml',
     code: yaml.stringify({
@@ -36,8 +36,9 @@ const valids: ValidTestCase[] = [
         },
       },
     }),
+    options: [{ checkDuplicates: 'exact-version' }],
   },
-  // Different version ranges (both valid use cases)
+  // Different version ranges (valid with exact-version mode)
   {
     filename: 'pnpm-workspace.yaml',
     code: yaml.stringify({
@@ -53,11 +54,12 @@ const valids: ValidTestCase[] = [
         },
       },
     }),
+    options: [{ checkDuplicates: 'exact-version' }],
   },
 ]
 
 const invalids: InvalidTestCase[] = [
-  // Same package with identical version in multiple catalogs (redundant)
+  // Same package with identical version in multiple catalogs (error in both modes)
   {
     filename: 'pnpm-workspace.yaml',
     code: yaml.stringify({
@@ -77,6 +79,59 @@ const invalids: InvalidTestCase[] = [
       {
         messageId: 'duplicateCatalogItem',
         data: { name: 'react', version: '^18.2.0', currentCatalog: 'dev', existingCatalog: 'prod' },
+      },
+    ],
+  },
+  // name-only mode: Different versions still error (default behavior)
+  {
+    filename: 'pnpm-workspace.yaml',
+    code: yaml.stringify({
+      packages: [
+        'packages/*',
+      ],
+      catalogs: {
+        react7: {
+          react: '^7',
+        },
+        react8: {
+          react: '^8',
+        },
+      },
+    }),
+    options: [{ checkDuplicates: 'name-only' }],
+    errors: [
+      {
+        messageId: 'duplicateCatalogItem',
+        data: { name: 'react', version: '^8', currentCatalog: 'react8', existingCatalog: 'react7' },
+      },
+    ],
+  },
+  // name-only mode (default): Multiple packages with different versions all error
+  {
+    filename: 'pnpm-workspace.yaml',
+    code: yaml.stringify({
+      packages: [
+        'packages/*',
+      ],
+      catalogs: {
+        minor: {
+          react: '^18.0.0',
+          lodash: '^4.17.0',
+        },
+        patch: {
+          react: '~18.2.0',
+          lodash: '^4.17.21',
+        },
+      },
+    }),
+    errors: [
+      {
+        messageId: 'duplicateCatalogItem',
+        data: { name: 'react', version: '~18.2.0', currentCatalog: 'patch', existingCatalog: 'minor' },
+      },
+      {
+        messageId: 'duplicateCatalogItem',
+        data: { name: 'lodash', version: '^4.17.21', currentCatalog: 'patch', existingCatalog: 'minor' },
       },
     ],
   },

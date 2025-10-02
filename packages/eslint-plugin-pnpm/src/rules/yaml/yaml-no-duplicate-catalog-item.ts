@@ -8,6 +8,7 @@ export type MessageIds = 'duplicateCatalogItem'
 export type Options = [
   {
     allow?: string[]
+    checkDuplicates?: 'name-only' | 'exact-version'
   },
 ]
 
@@ -26,6 +27,12 @@ export default createEslintRule<Options, MessageIds>({
           allow: {
             type: 'array',
             items: { type: 'string' },
+          },
+          checkDuplicates: {
+            type: 'string',
+            enum: ['name-only', 'exact-version'],
+            description: 'Determines what constitutes a duplicate: "name-only" errors on any duplicate package name, "exact-version" only errors on identical version strings',
+            default: 'name-only',
           },
         },
         additionalProperties: false,
@@ -47,7 +54,7 @@ export default createEslintRule<Options, MessageIds>({
     if (workspace.hasChanged() || workspace.hasQueue())
       return {}
 
-    const { allow = [] } = options
+    const { allow = [], checkDuplicates = 'name-only' } = options
 
     workspace.setContent(context.sourceCode.text)
     const json = workspace.toJSON() || {}
@@ -69,8 +76,12 @@ export default createEslintRule<Options, MessageIds>({
 
         const existing = exists.get(key)
         if (existing) {
-          // Only report if the versions are identical (redundant duplicate)
-          if (existing.version === version) {
+          // Determine if this is a duplicate based on the check mode
+          const isDuplicate = checkDuplicates === 'name-only'
+            ? true // Any duplicate package name is an error
+            : existing.version === version // Only identical versions are errors
+
+          if (isDuplicate) {
             const node = doc.getIn(catalog === 'default' ? (json.catalog ? ['catalog', key] : ['catalogs', catalog, key]) : ['catalogs', catalog, key], true)! as YAMLScalar
             const start = context.sourceCode.getLocFromIndex(node.range![0])
             const end = context.sourceCode.getLocFromIndex(node.range![1])
