@@ -20,31 +20,69 @@ const valids: ValidTestCase[] = [
       },
     }),
   },
+  // Same package in different catalogs with different versions (valid with exact-version mode)
+  {
+    filename: 'pnpm-workspace.yaml',
+    code: yaml.stringify({
+      packages: [
+        'packages/*',
+      ],
+      catalogs: {
+        legacy: {
+          typescript: '^4',
+        },
+        modern: {
+          typescript: '^5',
+        },
+      },
+    }),
+    options: [{ checkDuplicates: 'exact-version' }],
+  },
+  // Different version ranges (valid with exact-version mode)
+  {
+    filename: 'pnpm-workspace.yaml',
+    code: yaml.stringify({
+      packages: [
+        'packages/*',
+      ],
+      catalogs: {
+        minor: {
+          lodash: '^4.17.0',
+        },
+        patch: {
+          lodash: '~4.17.21',
+        },
+      },
+    }),
+    options: [{ checkDuplicates: 'exact-version' }],
+  },
 ]
 
 const invalids: InvalidTestCase[] = [
+  // Same package with identical version in multiple catalogs (error in both modes)
   {
     filename: 'pnpm-workspace.yaml',
     code: yaml.stringify({
       packages: [
         'packages/*',
       ],
-      catalog: {
-        foo: 'bar',
-      },
       catalogs: {
-        react: {
-          foo: '^18.2.0',
+        prod: {
+          lodash: '^4.17.21',
+        },
+        dev: {
+          lodash: '^4.17.21',
         },
       },
     }),
     errors: [
       {
         messageId: 'duplicateCatalogItem',
-        data: { name: 'foo', currentCatalog: 'default', existingCatalog: 'react' },
+        data: { name: 'lodash', version: '^4.17.21', currentCatalog: 'dev', existingCatalog: 'prod' },
       },
     ],
   },
+  // name-only mode: Different versions still error (default behavior)
   {
     filename: 'pnpm-workspace.yaml',
     code: yaml.stringify({
@@ -52,18 +90,48 @@ const invalids: InvalidTestCase[] = [
         'packages/*',
       ],
       catalogs: {
-        react: {
-          foo: '^18.2.0',
+        legacy: {
+          typescript: '^4',
         },
-        default: {
-          foo: 'bar',
+        modern: {
+          typescript: '^5',
+        },
+      },
+    }),
+    options: [{ checkDuplicates: 'name-only' }],
+    errors: [
+      {
+        messageId: 'duplicateCatalogItem',
+        data: { name: 'typescript', version: '^5', currentCatalog: 'modern', existingCatalog: 'legacy' },
+      },
+    ],
+  },
+  // name-only mode (default): Multiple packages with different versions all error
+  {
+    filename: 'pnpm-workspace.yaml',
+    code: yaml.stringify({
+      packages: [
+        'packages/*',
+      ],
+      catalogs: {
+        minor: {
+          eslint: '^8.0.0',
+          lodash: '^4.17.0',
+        },
+        patch: {
+          eslint: '~8.57.0',
+          lodash: '^4.17.21',
         },
       },
     }),
     errors: [
       {
         messageId: 'duplicateCatalogItem',
-        data: { name: 'foo', currentCatalog: 'default', existingCatalog: 'react' },
+        data: { name: 'eslint', version: '~8.57.0', currentCatalog: 'patch', existingCatalog: 'minor' },
+      },
+      {
+        messageId: 'duplicateCatalogItem',
+        data: { name: 'lodash', version: '^4.17.21', currentCatalog: 'patch', existingCatalog: 'minor' },
       },
     ],
   },
