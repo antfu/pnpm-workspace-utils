@@ -28,11 +28,11 @@ const valids: ValidTestCase[] = [
         'packages/*',
       ],
       catalogs: {
-        react7: {
-          react: '^7',
+        legacy: {
+          typescript: '^4',
         },
-        react8: {
-          react: '^8',
+        modern: {
+          typescript: '^5',
         },
       },
     }),
@@ -47,10 +47,10 @@ const valids: ValidTestCase[] = [
       ],
       catalogs: {
         minor: {
-          react: '^18.0.0',
+          lodash: '^4.17.0',
         },
         patch: {
-          react: '~18.2.0',
+          lodash: '~4.17.21',
         },
       },
     }),
@@ -68,17 +68,17 @@ const invalids: InvalidTestCase[] = [
       ],
       catalogs: {
         prod: {
-          react: '^18.2.0',
+          lodash: '^4.17.21',
         },
         dev: {
-          react: '^18.2.0',
+          lodash: '^4.17.21',
         },
       },
     }),
     errors: [
       {
         messageId: 'duplicateCatalogItem',
-        data: { name: 'react', version: '^18.2.0', currentCatalog: 'dev', existingCatalog: 'prod' },
+        data: { name: 'lodash', version: '^4.17.21', currentCatalog: 'dev', existingCatalog: 'prod' },
       },
     ],
   },
@@ -90,11 +90,11 @@ const invalids: InvalidTestCase[] = [
         'packages/*',
       ],
       catalogs: {
-        react7: {
-          react: '^7',
+        legacy: {
+          typescript: '^4',
         },
-        react8: {
-          react: '^8',
+        modern: {
+          typescript: '^5',
         },
       },
     }),
@@ -102,7 +102,7 @@ const invalids: InvalidTestCase[] = [
     errors: [
       {
         messageId: 'duplicateCatalogItem',
-        data: { name: 'react', version: '^8', currentCatalog: 'react8', existingCatalog: 'react7' },
+        data: { name: 'typescript', version: '^5', currentCatalog: 'modern', existingCatalog: 'legacy' },
       },
     ],
   },
@@ -115,11 +115,11 @@ const invalids: InvalidTestCase[] = [
       ],
       catalogs: {
         minor: {
-          react: '^18.0.0',
+          eslint: '^8.0.0',
           lodash: '^4.17.0',
         },
         patch: {
-          react: '~18.2.0',
+          eslint: '~8.57.0',
           lodash: '^4.17.21',
         },
       },
@@ -127,7 +127,7 @@ const invalids: InvalidTestCase[] = [
     errors: [
       {
         messageId: 'duplicateCatalogItem',
-        data: { name: 'react', version: '~18.2.0', currentCatalog: 'patch', existingCatalog: 'minor' },
+        data: { name: 'eslint', version: '~8.57.0', currentCatalog: 'patch', existingCatalog: 'minor' },
       },
       {
         messageId: 'duplicateCatalogItem',
