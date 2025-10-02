@@ -77,10 +77,25 @@ export default [
     rules: {
       'pnpm/yaml-no-unused-catalog-item': 'error',
       'pnpm/yaml-no-duplicate-catalog-item': 'error',
+      'pnpm/yaml-valid-packages': 'error',
     },
   },
 ]
 ```
+
+## Rules
+
+### JSON Rules (`package.json`)
+
+- [`json-enforce-catalog`](./src/rules/json/json-enforce-catalog.ts) - Enforce catalog usage for dependencies
+- [`json-valid-catalog`](./src/rules/json/json-valid-catalog.ts) - Validate catalog references in dependencies
+- [`json-prefer-workspace-settings`](./src/rules/json/json-prefer-workspace-settings.ts) - Prefer workspace protocol for local dependencies
+
+### YAML Rules (`pnpm-workspace.yaml`)
+
+- [`yaml-no-unused-catalog-item`](./src/rules/yaml/yaml-no-unused-catalog-item.ts) - Disallow unused catalog items
+- [`yaml-no-duplicate-catalog-item`](./src/rules/yaml/yaml-no-duplicate-catalog-item.ts) - Disallow duplicate catalog items with same version
+- [`yaml-valid-packages`](./src/rules/yaml/yaml-valid-packages.ts) - Ensure package patterns match directories with package.json
 
 ## Settings
 
