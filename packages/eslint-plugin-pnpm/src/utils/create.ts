@@ -1,4 +1,4 @@
-import type { RuleListener, RuleWithMeta, RuleWithMetaAndName } from '@typescript-eslint/utils/eslint-utils'
+import type { RuleListener, RuleWithMetaAndName } from '@typescript-eslint/utils/eslint-utils'
 import type { RuleContext } from '@typescript-eslint/utils/ts-eslint'
 import type { Rule } from 'eslint'
 
@@ -7,6 +7,7 @@ const blobUrl = 'https://github.com/antfu/pnpm-workspace-utils/tree/main/package
 export type RuleModule<
   T extends readonly unknown[],
 > = Rule.RuleModule & {
+  name: string
   defaultOptions: T
 }
 
@@ -51,11 +52,13 @@ function createRule<
   TOptions extends readonly unknown[],
   TMessageIds extends string,
 >({
+  name,
   create,
   defaultOptions,
   meta,
-}: Readonly<RuleWithMeta<TOptions, TMessageIds>>): RuleModule<TOptions> {
+}: Readonly<RuleWithMetaAndName<TOptions, TMessageIds>>): RuleModule<TOptions> {
   return {
+    name,
     create: ((
       context: Readonly<RuleContext<TMessageIds, TOptions>>,
     ): RuleListener => {
