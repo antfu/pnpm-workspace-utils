@@ -96,6 +96,7 @@ export default [
 - [`yaml-no-unused-catalog-item`](./src/rules/yaml/yaml-no-unused-catalog-item.ts) - Disallow unused catalog items
 - [`yaml-no-duplicate-catalog-item`](./src/rules/yaml/yaml-no-duplicate-catalog-item.ts) - Disallow duplicate catalog items
 - [`yaml-valid-packages`](./src/rules/yaml/yaml-valid-packages.ts) - Ensure package patterns match directories with package.json
+- [`yaml-enforce-settings`](./src/rules/yaml/yaml-enforce-settings.ts) - Enforce settings in `pnpm-workspace.yaml`
 
 ## Settings
 

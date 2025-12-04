@@ -57,6 +57,7 @@
     "pathe": "catalog:prod",
     "pnpm-workspace-yaml": "workspace:*",
     "tinyglobby": "catalog:prod",
+    "yaml": "catalog:prod",
     "yaml-eslint-parser": "catalog:prod"
   },
   "devDependencies": {

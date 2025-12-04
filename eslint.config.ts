@@ -9,4 +9,18 @@ export default antfu(
   },
   ...configs.recommended,
   ...configs.yaml,
+  {
+    name: 'pnpm/pnpm-workspace-yaml/2',
+    files: ['pnpm-workspace.yaml'],
+    rules: {
+      'pnpm/yaml-enforce-settings': ['error', {
+        settings: {
+          shellEmulator: true,
+          trustPolicy: 'no-downgrade',
+          catalogMode: 'prefer',
+          cleanupUnusedCatalogs: true,
+        },
+      }],
+    },
+  },
 )

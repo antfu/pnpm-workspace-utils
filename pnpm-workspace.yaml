@@ -1,8 +1,11 @@
-packages:
-  - packages/*
-
+cleanupUnusedCatalogs: true
+catalogMode: prefer
+trustPolicy: no-downgrade
 ignoreWorkspaceRootCheck: true
 shellEmulator: true
+
+packages:
+  - packages/*
 
 catalogs:
   dev:
@@ -34,6 +37,7 @@ catalogs:
     tinyexec: ^1.0.1
     vitest: ^3.2.4
     vitest-package-exports: ^0.1.1
+
 onlyBuiltDependencies:
   - esbuild
   - simple-git-hooks
