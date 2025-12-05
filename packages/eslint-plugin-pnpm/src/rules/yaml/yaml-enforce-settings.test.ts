@@ -1,4 +1,5 @@
 import type { InvalidTestCase, ValidTestCase } from 'eslint-vitest-rule-tester'
+import { $ } from 'eslint-vitest-rule-tester'
 import { expect } from 'vitest'
 import yaml from 'yaml'
 import { runYaml } from '../../utils/_test'
@@ -234,6 +235,7 @@ const invalids: InvalidTestCase[] = [
       expect(out).toMatchInlineSnapshot(`
         "packages:
           - packages/*
+
         onlyBuiltDependencies:
           - esbuild
         "
@@ -297,9 +299,12 @@ const invalids: InvalidTestCase[] = [
       expect(out).toMatchInlineSnapshot(`
         "packages:
           - packages/*
+
         onlyBuiltDependencies:
           - esbuild
+
         linkWorkspacePackages: true
+
         "
       `)
     },
@@ -336,6 +341,7 @@ const invalids: InvalidTestCase[] = [
       expect(out).toMatchInlineSnapshot(`
         "packages:
           - packages/*
+
         onlyBuiltDependencies:
           - esbuild
         "
@@ -625,7 +631,8 @@ const invalids: InvalidTestCase[] = [
     ],
     output: (out) => {
       expect(out).toMatchInlineSnapshot(`
-        "onlyBuiltDependencies:
+        "
+        onlyBuiltDependencies:
           - esbuild
         packages:
           - packages/*
@@ -652,6 +659,64 @@ const invalids: InvalidTestCase[] = [
         data: { key: 'patchedDependencies' },
       },
     ],
+  },
+  {
+    name: 'Mismatched boolean value',
+    filename: 'pnpm-workspace.yaml',
+    code: $`
+
+      packages:
+        - packages/*
+
+      linkWorkspacePackages: false
+    `,
+    options: [{
+      settings: {
+        catalogMode: 'prefer',
+        cleanupUnusedCatalogs: true,
+        shellEmulator: true,
+        trustPolicy: 'no-downgrade',
+      },
+    }],
+    errors: (errors) => {
+      expect(errors.map(error => [error.messageId, error.message]))
+        .toMatchInlineSnapshot(`
+          [
+            [
+              "settingMismatch",
+              "Setting "catalogMode" has mismatch value. Expected: "prefer", Actual: undefined.",
+            ],
+            [
+              "settingMismatch",
+              "Setting "cleanupUnusedCatalogs" has mismatch value. Expected: true, Actual: undefined.",
+            ],
+            [
+              "settingMismatch",
+              "Setting "shellEmulator" has mismatch value. Expected: true, Actual: undefined.",
+            ],
+            [
+              "settingMismatch",
+              "Setting "trustPolicy" has mismatch value. Expected: "no-downgrade", Actual: undefined.",
+            ],
+          ]
+        `)
+    },
+    output: (out) => {
+      expect(out).toMatchInlineSnapshot(`
+        "
+        trustPolicy: no-downgrade
+
+        shellEmulator: true
+
+        cleanupUnusedCatalogs: true
+
+        catalogMode: prefer
+        packages:
+          - packages/*
+
+        linkWorkspacePackages: false"
+      `)
+    },
   },
 ]
 

@@ -77,8 +77,8 @@ export default createEslintRule<Options, MessageIds>({
       forbiddenFields = [],
     } = options || {}
 
-    if (requiredFields.length === 0 && Object.keys(settings).length === 0 && forbiddenFields.length === 0)
-      throw new Error('Either `requiredFields` or `settings` or `forbiddenFields` is not provided, this rule is not functional.')
+    if (Object.keys(settings).length === 0 && requiredFields.length === 0 && forbiddenFields.length === 0)
+      throw new Error('Either `settings` or `requiredFields` or `forbiddenFields` must be provided, this rule is not functional currently.')
 
     if (basename(context.filename) !== 'pnpm-workspace.yaml')
       return {}
@@ -149,7 +149,7 @@ export default createEslintRule<Options, MessageIds>({
           data: { key, expected: expectedStr, actual: actualStr },
           fix: autofix
             ? (fixer) => {
-                const replacer = yaml.stringify({ [key]: value }, { collectionStyle: 'block' })
+                const replacer = `\n${yaml.stringify({ [key]: value }, { collectionStyle: 'block' })}`
                 return fixer.insertTextBeforeRange([0, 0], replacer)
               }
             : undefined,
@@ -179,10 +179,6 @@ export default createEslintRule<Options, MessageIds>({
           // Get from start of key to end of value
           startIndex = pairItem.key.range[0]
           endIndex = pairItem.value.range[1]
-          // Include the newline if present
-          const text = context.sourceCode.text
-          if (text[endIndex] === '\n')
-            endIndex++
         }
 
         context.report({
@@ -194,7 +190,7 @@ export default createEslintRule<Options, MessageIds>({
           data: { key, expected: expectedStr, actual: actualStr },
           fix: autofix
             ? (fixer) => {
-                const replacer = yaml.stringify({ [key]: value }, { collectionStyle: 'block' })
+                const replacer = `\n${yaml.stringify({ [key]: value }, { collectionStyle: 'block' })}`
                 return fixer.replaceTextRange([startIndex, endIndex], replacer)
               }
             : undefined,
