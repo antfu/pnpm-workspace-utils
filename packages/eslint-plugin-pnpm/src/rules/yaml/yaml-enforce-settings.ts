@@ -27,6 +27,7 @@ export default createEslintRule<Options, MessageIds>({
     schema: [
       {
         type: 'object',
+        additionalProperties: false,
         properties: {
           autofix: {
             type: 'boolean',
