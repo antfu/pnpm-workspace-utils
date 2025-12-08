@@ -6,6 +6,7 @@ export default antfu(
   {
     type: 'lib',
     formatters: true,
+    pnpm: false,
   },
   ...configs.recommended,
   ...configs.yaml,

@@ -36,6 +36,9 @@
     "yaml": "catalog:prod",
     "yaml-eslint-parser": "catalog:prod"
   },
+  "resolutions": {
+    "eslint-plugin-pnpm": "workspace:*"
+  },
   "simple-git-hooks": {
     "pre-commit": "pnpm lint-staged"
   },
