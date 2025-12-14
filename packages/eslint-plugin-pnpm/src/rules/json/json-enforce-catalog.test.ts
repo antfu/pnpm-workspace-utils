@@ -244,6 +244,31 @@ const invalids: InvalidTestCase[] = [
         `)
     },
   },
+  {
+    description: 'BUG: Should not modify workspace file when linting without --fix',
+    filename: 'package.json',
+    code: JSON.stringify({
+      dependencies: {
+        lodash: '^4.17.21',
+      },
+    }, null, 2),
+    errors: [
+      { messageId: 'expectCatalog' },
+    ],
+    async before() {
+      const workspace = getMockedWorkspace()
+      workspace.setContent(``)
+    },
+    async after() {
+      // Wait for any queued changes to potentially execute
+      await new Promise(resolve => setTimeout(resolve, 1100))
+
+      const workspace = getMockedWorkspace()
+      // BUG: This test should pass, but currently fails because
+      // the workspace file gets modified even without applying fixes
+      expect(workspace.toString()).toBe('')
+    },
+  },
 ]
 
 runJson({
