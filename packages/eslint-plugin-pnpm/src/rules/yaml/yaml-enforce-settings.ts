@@ -150,7 +150,7 @@ export default createEslintRule<Options, MessageIds>({
           data: { key, expected: expectedStr, actual: actualStr },
           fix: autofix
             ? (fixer) => {
-                const replacer = `\n${yaml.stringify({ [key]: value }, { collectionStyle: 'block' })}`
+                const replacer = `\n${yaml.stringify({ [key]: value }, { collectionStyle: 'block' })}\n`
                 return fixer.insertTextBeforeRange([0, 0], replacer)
               }
             : undefined,
@@ -191,7 +191,7 @@ export default createEslintRule<Options, MessageIds>({
           data: { key, expected: expectedStr, actual: actualStr },
           fix: autofix
             ? (fixer) => {
-                const replacer = `\n${yaml.stringify({ [key]: value }, { collectionStyle: 'block' })}`
+                const replacer = `\n${yaml.stringify({ [key]: value }, { collectionStyle: 'block' })}\n`
                 return fixer.replaceTextRange([startIndex, endIndex], replacer)
               }
             : undefined,

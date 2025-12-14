@@ -238,6 +238,7 @@ const invalids: InvalidTestCase[] = [
 
         onlyBuiltDependencies:
           - esbuild
+
         "
       `)
     },
@@ -303,7 +304,9 @@ const invalids: InvalidTestCase[] = [
         onlyBuiltDependencies:
           - esbuild
 
+
         linkWorkspacePackages: true
+
 
         "
       `)
@@ -344,6 +347,7 @@ const invalids: InvalidTestCase[] = [
 
         onlyBuiltDependencies:
           - esbuild
+
         "
       `)
     },
@@ -634,6 +638,7 @@ const invalids: InvalidTestCase[] = [
         "
         onlyBuiltDependencies:
           - esbuild
+
         packages:
           - packages/*
         "
@@ -706,11 +711,15 @@ const invalids: InvalidTestCase[] = [
         "
         trustPolicy: no-downgrade
 
+
         shellEmulator: true
+
 
         cleanupUnusedCatalogs: true
 
+
         catalogMode: prefer
+
         packages:
           - packages/*
 
