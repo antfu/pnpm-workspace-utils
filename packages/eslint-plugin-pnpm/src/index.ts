@@ -49,7 +49,7 @@ const configsYaml: Linter.Config[] = [
       'pnpm/yaml-valid-packages': 'error',
       'pnpm/yaml-enforce-settings': [
         'error',
-        { settings: { minimumReleaseAge: 10080 } },
+        { requiredFields: ['minimumReleaseAge'] },
       ],
     },
   },
