@@ -5,7 +5,7 @@ import { run as _run } from 'eslint-vitest-rule-tester'
 import jsoncParser from 'jsonc-eslint-parser'
 import { parsePnpmWorkspaceYaml } from 'pnpm-workspace-yaml'
 import { vi } from 'vitest'
-import yamlParser from 'yaml-eslint-parser'
+import * as yamlParser from 'yaml-eslint-parser'
 // @ts-expect-error mocked function
 import { _getWorkspace, _reset } from './_read'
 
