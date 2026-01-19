@@ -51,7 +51,11 @@ const configsYaml: Linter.Config[] = [
   },
 ]
 
-export const configs = {
+export const configs: {
+  recommended: Linter.Config[]
+  json: Linter.Config[]
+  yaml: Linter.Config[]
+} = {
   recommended: [
     ...configsJson,
     // Yaml support is still experimental

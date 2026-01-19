@@ -2,18 +2,18 @@
   "compilerOptions": {
     "target": "ESNext",
     "lib": ["ESNext"],
+    "customConditions": ["dev"],
     "module": "ESNext",
     "moduleResolution": "Bundler",
-    "paths": {
-      "pnpm-workspace-yaml": ["./packages/pnpm-workspace-yaml/src/index.ts"]
-    },
     "resolveJsonModule": true,
     "strict": true,
     "strictNullChecks": true,
+    "declaration": true,
     "noEmit": true,
     "esModuleInterop": true,
     "verbatimModuleSyntax": true,
     "skipDefaultLibCheck": true,
     "skipLibCheck": true
-  }
+  },
+  "exclude": ["eslint.config.ts"]
 }
