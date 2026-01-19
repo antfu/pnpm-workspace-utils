@@ -1,7 +1,7 @@
 {
   "name": "eslint-plugin-pnpm",
   "type": "module",
-  "version": "1.4.3",
+  "version": "1.5.0",
   "description": "ESLint Plugin for pnpm",
   "author": "Anthony Fu <anthonyfu117@hotmail.com>",
   "contributors": [
