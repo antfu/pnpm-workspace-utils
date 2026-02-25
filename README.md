@@ -14,13 +14,13 @@ This is a monorepo consisting of two packages:
 
 <p align="center">
   <a href="https://cdn.jsdelivr.net/gh/antfu/static/sponsors.svg">
-    <img src='https://cdn.jsdelivr.net/gh/antfu/static/sponsors.svg'/>
+    <img src='https://cdn.jsdelivr.net/gh/antfu/static/sponsors.svg' alt="antfu's sponsors"/>
   </a>
 </p>
 
 <p align="center">
   <a href="https://cdn.jsdelivr.net/gh/sxzz/sponsors/sponsors.svg">
-    <img src='https://cdn.jsdelivr.net/gh/sxzz/sponsors/sponsors.svg'/>
+    <img src='https://cdn.jsdelivr.net/gh/sxzz/sponsors/sponsors.svg' alt="sxzz's sponsors"/>
   </a>
 </p>
 
