@@ -2,7 +2,7 @@ import type { RuleTesterInitOptions, TestCasesOptions } from 'eslint-vitest-rule
 import type { PnpmWorkspaceYamlExtended } from './_read'
 import { beforeEach } from 'node:test'
 import { run as _run } from 'eslint-vitest-rule-tester'
-import jsoncParser from 'jsonc-eslint-parser'
+import * as jsoncParser from 'jsonc-eslint-parser'
 import { parsePnpmWorkspaceYaml } from 'pnpm-workspace-yaml'
 import { vi } from 'vitest'
 import * as yamlParser from 'yaml-eslint-parser'
