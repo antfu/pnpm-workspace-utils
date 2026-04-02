@@ -1,6 +1,6 @@
 import { createEslintRule } from '../../utils/create'
 import { getPackageJsonRootNode } from '../../utils/iterate'
-import { getPnpmWorkspace } from '../../utils/workspace'
+import { getPnpmWorkspace, isWorkspacePackageJson } from '../../utils/workspace'
 
 export const RULE_NAME = 'json-prefer-workspace-settings'
 export type MessageIds = 'unexpectedPnpmSettings'
@@ -50,7 +50,7 @@ export default createEslintRule<Options, MessageIds>({
       return {}
 
     const workspace = getPnpmWorkspace(context)
-    if (!workspace)
+    if (!workspace || !isWorkspacePackageJson(context.filename, workspace))
       return {}
 
     context.report({
