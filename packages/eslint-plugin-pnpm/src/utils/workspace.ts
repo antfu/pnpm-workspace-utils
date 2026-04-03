@@ -85,7 +85,7 @@ function globPackageJsonPaths(
   includeGlobs: string[],
   excludeGlobs: string[],
 ): Set<string> {
-  const cacheKey = [root, ...includeGlobs, '::', ...excludeGlobs].join('\0')
+  const cacheKey = JSON.stringify({ root, includeGlobs, excludeGlobs })
   const cached = packageJsonPathCache.get(cacheKey)
   if (cached)
     return cached
