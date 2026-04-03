@@ -66,6 +66,25 @@ const invalids: InvalidTestCase[] = [
   {
     filename: 'pnpm-workspace.yaml',
     code: yaml.stringify({
+      packages: [
+        'packages/*',
+      ],
+      catalogs: {
+        test: {
+          'never-used-package': '*',
+        },
+      },
+    }),
+    errors: [
+      {
+        messageId: 'unusedCatalogItem',
+        data: { catalogItem: 'never-used-package:test' },
+      },
+    ],
+  },
+  {
+    filename: 'pnpm-workspace.yaml',
+    code: yaml.stringify({
       packages: null,
       overrides: {
         foo: 'catalog:prod',

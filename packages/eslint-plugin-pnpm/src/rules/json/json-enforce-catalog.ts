@@ -1,6 +1,6 @@
 import { createEslintRule } from '../../utils/create'
 import { iterateDependencies } from '../../utils/iterate'
-import { getPnpmWorkspace } from '../../utils/workspace'
+import { getPnpmWorkspace, isWorkspacePackageJson } from '../../utils/workspace'
 
 export type ConflictStrategy = 'new-catalog' | 'overrides' | 'error'
 
@@ -94,15 +94,15 @@ export default createEslintRule<Options, MessageIds>({
       ignores = [],
     } = options || {}
 
+    const workspace = getPnpmWorkspace(context)
+    if (!workspace || !isWorkspacePackageJson(context.filename, workspace))
+      return {}
+
     for (const { packageName, specifier, property } of iterateDependencies(context, fields)) {
       if (specifier.startsWith('catalog:') || ignores.includes(packageName))
         continue
       if (allowedProtocols?.some(p => specifier.startsWith(p)))
         continue
-
-      const workspace = getPnpmWorkspace(context)
-      if (!workspace)
-        return {}
 
       let targetCatalog = reuseExistingCatalog
         ? (workspace.getPackageCatalogs(packageName)[0] || defaultCatalog)
