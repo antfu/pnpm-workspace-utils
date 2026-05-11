@@ -42,3 +42,5 @@ catalogs:
 onlyBuiltDependencies:
   - esbuild
   - simple-git-hooks
+overrides:
+  eslint-plugin-pnpm: workspace:*
