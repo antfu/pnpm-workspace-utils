@@ -27,6 +27,7 @@ const configsJson: Linter.Config[] = [
     },
     rules: {
       'pnpm/json-enforce-catalog': 'error',
+      'pnpm/json-prefer-pnpm-overrides': 'warn',
       'pnpm/json-valid-catalog': 'error',
       'pnpm/json-prefer-workspace-settings': 'error',
     },
