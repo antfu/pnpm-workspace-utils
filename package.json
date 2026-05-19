@@ -2,7 +2,7 @@
   "type": "module",
   "version": "1.6.0",
   "private": true,
-  "packageManager": "pnpm@10.30.2",
+  "packageManager": "pnpm@11.1.3",
   "scripts": {
     "build": "tsdown",
     "lint": "eslint .",
@@ -35,9 +35,6 @@
     "vitest-package-exports": "catalog:test",
     "yaml": "catalog:prod",
     "yaml-eslint-parser": "catalog:prod"
-  },
-  "resolutions": {
-    "eslint-plugin-pnpm": "workspace:*"
   },
   "simple-git-hooks": {
     "pre-commit": "pnpm lint-staged"
