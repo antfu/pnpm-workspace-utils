@@ -1,6 +1,6 @@
 import { createEslintRule } from '../../utils/create'
 import { iterateDependencies } from '../../utils/iterate'
-import { getPnpmWorkspace } from '../../utils/workspace'
+import { getPnpmWorkspace, isWorkspacePackageJson } from '../../utils/workspace'
 
 export const RULE_NAME = 'json-valid-catalog'
 export type MessageIds = 'invalidCatalog'
@@ -77,13 +77,13 @@ export default createEslintRule<Options, MessageIds>({
       fields = DEFAULT_FIELDS,
     } = options || {}
 
+    const workspace = getPnpmWorkspace(context)
+    if (!workspace || !isWorkspacePackageJson(context.filename, workspace))
+      return {}
+
     for (const { packageName, specifier, property } of iterateDependencies(context, fields)) {
       if (!specifier.startsWith('catalog:'))
         continue
-
-      const workspace = getPnpmWorkspace(context)
-      if (!workspace)
-        return {}
 
       const currentCatalog = specifier.replace(/^catalog:/, '').trim() || 'default'
       const existingCatalogs = workspace.getPackageCatalogs(packageName)

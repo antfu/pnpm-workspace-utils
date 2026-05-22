@@ -1,9 +1,8 @@
 import type { YAMLMap, Pair as YAMLPair } from 'yaml'
 import { existsSync, readFileSync } from 'node:fs'
-import { basename, dirname, normalize, resolve } from 'pathe'
-import { globSync } from 'tinyglobby'
+import { basename, normalize } from 'pathe'
 import { createEslintRule } from '../../utils/create'
-import { getPnpmWorkspace } from '../../utils/workspace'
+import { getPnpmWorkspace, getWorkspacePackageJsonPaths } from '../../utils/workspace'
 
 export const RULE_NAME = 'yaml-no-unused-catalog-item'
 export type MessageIds = 'unusedCatalogItem'
@@ -38,7 +37,6 @@ export default createEslintRule<Options, MessageIds>({
 
     workspace.setContent(context.sourceCode.text)
     const parsed = workspace.toJSON() || {}
-    const root = resolve(dirname(context.filename))
 
     const entries: Map<string, YAMLPair<any, any>> = new Map()
 
@@ -69,25 +67,7 @@ export default createEslintRule<Options, MessageIds>({
     if (entries.size === 0)
       return {}
 
-    const dirs = parsed.packages
-      ? globSync(parsed.packages, {
-          cwd: root,
-          dot: false,
-          ignore: [
-            '**/node_modules/**',
-            '**/dist/**',
-            '**/build/**',
-            '**/dist/**',
-            '**/dist/**',
-          ],
-          absolute: true,
-          expandDirectories: false,
-          onlyDirectories: true,
-        })
-      : []
-    dirs.push(root)
-
-    const packages = dirs.map(dir => resolve(dir, 'package.json'))
+    const packages = Array.from(getWorkspacePackageJsonPaths(workspace))
       .filter(x => existsSync(x))
       .sort()
 
