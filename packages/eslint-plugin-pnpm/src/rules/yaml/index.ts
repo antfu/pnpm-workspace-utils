@@ -1,6 +1,7 @@
 import enforceSettings from './yaml-enforce-settings'
 import noDuplicateCatalogItem from './yaml-no-duplicate-catalog-item'
 import noUnusedCatalogItem from './yaml-no-unused-catalog-item'
+import sortCatalogs from './yaml-sort-catalogs'
 import validPackages from './yaml-valid-packages'
 
 export const rules = {
@@ -8,4 +9,5 @@ export const rules = {
   'yaml-no-duplicate-catalog-item': noDuplicateCatalogItem,
   'yaml-valid-packages': validPackages,
   'yaml-enforce-settings': enforceSettings,
+  'yaml-sort-catalogs': sortCatalogs,
 }

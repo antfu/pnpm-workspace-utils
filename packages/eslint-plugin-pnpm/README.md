@@ -35,6 +35,39 @@ export default [
 ]
 ```
 
+### Optional Catalog Sorting
+
+Catalog sorting is not enabled by default. Add this after `...configs.yaml`:
+
+```js
+export default [
+  ...configs.yaml,
+  {
+    files: ['pnpm-workspace.yaml'],
+    rules: {
+      'pnpm/yaml-sort-catalogs': 'error',
+    },
+  },
+]
+```
+
+It sorts catalog names by default. To also sort package names inside catalogs:
+
+```js
+export default [
+  ...configs.yaml,
+  {
+    files: ['pnpm-workspace.yaml'],
+    rules: {
+      'pnpm/yaml-sort-catalogs': ['error', {
+        sortCatalogNames: true,
+        sortCatalogItems: true,
+      }],
+    },
+  },
+]
+```
+
 ### Manual Configuration
 
 ```js
@@ -97,6 +130,7 @@ export default [
 - [`yaml-no-duplicate-catalog-item`](./src/rules/yaml/yaml-no-duplicate-catalog-item.ts) - Disallow duplicate catalog items
 - [`yaml-valid-packages`](./src/rules/yaml/yaml-valid-packages.ts) - Ensure package patterns match directories with package.json
 - [`yaml-enforce-settings`](./src/rules/yaml/yaml-enforce-settings.ts) - Enforce settings in `pnpm-workspace.yaml`
+- [`yaml-sort-catalogs`](./src/rules/yaml/yaml-sort-catalogs.ts) - Enforce sorted catalogs in `pnpm-workspace.yaml`
 
 ## Settings
 
