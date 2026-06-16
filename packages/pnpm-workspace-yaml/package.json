@@ -27,7 +27,9 @@
     "url": "git+https://github.com/antfu/pnpm-workspace-utils.git",
     "directory": "packages/pnpm-workspace-yaml"
   },
-  "bugs": "https://github.com/antfu/pnpm-workspace-utils/issues",
+  "bugs": {
+    "url": "https://github.com/antfu/pnpm-workspace-utils/issues"
+  },
   "keywords": [
     "pnpm"
   ],

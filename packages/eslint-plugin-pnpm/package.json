@@ -27,7 +27,9 @@
     "url": "git+https://github.com/antfu/pnpm-workspace-utils.git",
     "directory": "packages/eslint-plugin-pnpm"
   },
-  "bugs": "https://github.com/antfu/pnpm-workspace-utils/issues",
+  "bugs": {
+    "url": "https://github.com/antfu/pnpm-workspace-utils/issues"
+  },
   "keywords": [
     "eslint-plugin",
     "pnpm"
