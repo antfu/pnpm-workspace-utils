@@ -67,5 +67,8 @@
       ".": "./dist/index.mjs",
       "./package.json": "./package.json"
     }
+  },
+  "inlinedDependencies": {
+    "@antfu/utils": "9.3.0"
   }
 }
