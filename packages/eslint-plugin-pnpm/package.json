@@ -52,6 +52,7 @@
   },
   "dependencies": {
     "empathic": "catalog:prod",
+    "eslint-json-compat-utils": "catalog:prod",
     "jsonc-eslint-parser": "catalog:prod",
     "pathe": "catalog:prod",
     "pnpm-workspace-yaml": "workspace:*",
@@ -60,6 +61,7 @@
     "yaml-eslint-parser": "catalog:prod"
   },
   "devDependencies": {
+    "@eslint/json": "catalog:test",
     "@typescript-eslint/parser": "catalog:dev"
   },
   "publishConfig": {

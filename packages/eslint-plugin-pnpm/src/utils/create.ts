@@ -1,6 +1,7 @@
 import type { RuleListener, RuleWithMetaAndName } from '@typescript-eslint/utils/eslint-utils'
 import type { RuleContext } from '@typescript-eslint/utils/ts-eslint'
 import type { Rule } from 'eslint'
+import { toCompatCreate } from 'eslint-json-compat-utils'
 
 const blobUrl = 'https://github.com/antfu/pnpm-workspace-utils/tree/main/packages/eslint-plugin-pnpm/src/rules/'
 
@@ -59,7 +60,13 @@ function createRule<
 }: Readonly<RuleWithMetaAndName<TOptions, TMessageIds>>): RuleModule<TOptions> {
   return {
     name,
-    create: ((
+    // Rules below are written against the `jsonc-eslint-parser` AST shape.
+    // `toCompatCreate` transparently adapts them to also work when a file is
+    // linted using the `json/json` (or other JSON) ESLint language plugin
+    // from `@eslint/json`, e.g. when combined with `pluginJson.configs.recommended`.
+    // For non-JSON-language files it's a no-op passthrough.
+    // See https://github.com/antfu/pnpm-workspace-utils/issues/38
+    create: toCompatCreate(((
       context: Readonly<RuleContext<TMessageIds, TOptions>>,
     ): RuleListener => {
       const optionsWithDefault = context.options.map((options, index) => {
@@ -69,7 +76,7 @@ function createRule<
         }
       }) as unknown as TOptions
       return create(context, optionsWithDefault)
-    }) as any,
+    }) as any),
     defaultOptions: defaultOptions as TOptions,
     meta: meta as any,
   }
