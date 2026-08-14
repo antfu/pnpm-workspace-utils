@@ -11,9 +11,12 @@ ESLint plugin to enforce and auto-fix pnpm catalogs.
 This plugin consists of two set of rules that applies to `package.json` and `pnpm-workspace.yaml` respectively.
 
 - [`json-` rules](./src/rules/json) applies to `package.json` and requires [`jsonc-eslint-parser`](https://github.com/ota-meshi/jsonc-eslint-parser) to be used as parser.
-  - The `json-` rules also work when `package.json` is linted with the `json/json` language from [`@eslint/json`](https://github.com/eslint/json) instead (e.g. when combined with other JSON-linting plugins), via [`eslint-json-compat-utils`](https://github.com/ota-meshi/eslint-json-compat-utils).
-- [`yaml-` rules](./src/rules/yaml) applies to `pnpm-workspace.yaml` and requires [`yaml-eslint-parser`](https://github.com/ota-meshi/yaml-eslint-parser) to be used as parser.
+  - The `json-` rules also work when `package.json` is linted with the `json/json` language from [`@eslint/json`](https://github.com/eslint/json) instead (e.g. when combined with other JSON-linting plugins), via the bundled [`eslint-json-compat-utils`](https://github.com/ota-meshi/eslint-json-compat-utils) — you don't need to install or configure that compat package yourself.
+- [`yaml-` rules](./src/rules/yaml) applies to `pnpm-workspace.yaml` and requires a YAML parser/language to be set (e.g. [`yaml-eslint-parser`](https://github.com/ota-meshi/yaml-eslint-parser), or the `yml/yaml` language from [`eslint-plugin-yml`](https://github.com/ota-meshi/eslint-plugin-yml)). These rules only read the raw source text, so any config that gets `pnpm-workspace.yaml` parsed as YAML works.
   - YAML support is still experimental as it might have race conditions with other plugins.
+
+> [!TIP]
+> Already linting `**/*.json` and `**/*.yaml` with `@eslint/json` / `eslint-plugin-yml`? You likely don't need to install `jsonc-eslint-parser` or `yaml-eslint-parser` yourself — see [Combining with JSON/YAML linting](#combining-with-jsonyaml-linting) below.
 
 ## Setup
 
@@ -84,6 +87,55 @@ export default [
   },
 ]
 ```
+
+### Combining with JSON/YAML linting
+
+If your ESLint config already lints general `**/*.json` and `**/*.yml`/`**/*.yaml` files (e.g. with [`@eslint/json`](https://github.com/eslint/json) and [`eslint-plugin-yml`](https://github.com/ota-meshi/eslint-plugin-yml)), you don't need to install or wire up `jsonc-eslint-parser`/`yaml-eslint-parser` separately for `pnpm/*` rules. ESLint merges config objects that match the same file, so `package.json`/`pnpm-workspace.yaml` inherit the JSON/YAML language already set by your general config — the `pnpm`-specific block only needs to add its `plugins`/`rules`:
+
+```js
+// eslint.config.mjs
+import { defineConfig } from 'eslint/config'
+import pluginJson from '@eslint/json'
+import pluginPnpm from 'eslint-plugin-pnpm'
+import pluginYaml from 'eslint-plugin-yml'
+
+export default defineConfig([
+  {
+    files: ['**/*.json'],
+    plugins: { json: pluginJson },
+    language: 'json/json',
+    extends: [pluginJson.configs.recommended],
+  },
+  {
+    files: ['**/*.yml', '**/*.yaml'],
+    plugins: { yml: pluginYaml },
+    extends: [pluginYaml.configs.standard],
+  },
+  {
+    name: 'pnpm/package.json',
+    files: ['package.json', '**/package.json'],
+    plugins: { pnpm: pluginPnpm },
+    rules: {
+      'pnpm/json-enforce-catalog': 'error',
+      'pnpm/json-valid-catalog': 'error',
+      'pnpm/json-prefer-workspace-settings': 'error',
+    },
+  },
+  {
+    name: 'pnpm/pnpm-workspace-yaml',
+    files: ['pnpm-workspace.yaml'],
+    plugins: { pnpm: pluginPnpm },
+    rules: {
+      'pnpm/yaml-no-unused-catalog-item': 'error',
+      'pnpm/yaml-no-duplicate-catalog-item': 'error',
+      'pnpm/yaml-valid-packages': 'error',
+      'pnpm/yaml-no-anonymous-catalog': 'error',
+    },
+  },
+])
+```
+
+This only works if the general JSON/YAML blocks' `files` glob actually matches `package.json`/`pnpm-workspace.yaml` (the defaults above do). If you lint those files with nothing else, use the [Manual Configuration](#manual-configuration) above instead, which sets the parser directly.
 
 ## Rules
 
