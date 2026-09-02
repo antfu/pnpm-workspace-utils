@@ -30,6 +30,41 @@ const valids: ValidTestCase[] = [
       '',
     ].join('\n'),
   },
+  // Entries for the same option are grouped together, no blank line in between
+  {
+    filename,
+    code: [
+      'trustPolicy: no-downgrade',
+      'trustPolicyExclude:',
+      '  - cached-factory@0.1.0',
+      '',
+    ].join('\n'),
+  },
+  // ... whichever of the two comes first
+  {
+    filename,
+    code: [
+      'minimumReleaseAgeExcludePrune: true',
+      'minimumReleaseAgeExclude:',
+      '  - eslint-plugin-pnpm@1.9.0',
+      '  - pnpm-workspace-yaml@1.9.0',
+      '',
+    ].join('\n'),
+  },
+  // A group holding a multi-line entry is padded from its neighbours as a whole
+  {
+    filename,
+    code: [
+      'shellEmulator: true',
+      '',
+      'minimumReleaseAgeExcludePrune: true',
+      'minimumReleaseAgeExclude:',
+      '  - eslint-plugin-pnpm@1.9.0',
+      '',
+      'shamefullyHoist: true',
+      '',
+    ].join('\n'),
+  },
   // Nested entries are not checked, whatever spacing they have
   {
     filename,
@@ -247,6 +282,46 @@ const invalids: InvalidTestCase[] = [
       '',
     ].join('\n'),
   },
+  // No blank line inside a group
+  {
+    filename,
+    code: [
+      'trustPolicy: no-downgrade',
+      '',
+      'trustPolicyExclude:',
+      '  - cached-factory@0.1.0',
+      '',
+    ].join('\n'),
+    errors: [{ messageId: 'unexpectedBlankLine', data: { key: 'trustPolicyExclude' } }],
+    output: [
+      'trustPolicy: no-downgrade',
+      'trustPolicyExclude:',
+      '  - cached-factory@0.1.0',
+      '',
+    ].join('\n'),
+  },
+  // A shared prefix that is not a camelCase boundary is not a group
+  {
+    filename,
+    code: [
+      'catalog:',
+      '  vitest: ^3.0.0',
+      'catalogs:',
+      '  dev:',
+      '    vue: ^3.0.0',
+      '',
+    ].join('\n'),
+    errors: [{ messageId: 'missingBlankLine', data: { key: 'catalogs' } }],
+    output: [
+      'catalog:',
+      '  vitest: ^3.0.0',
+      '',
+      'catalogs:',
+      '  dev:',
+      '    vue: ^3.0.0',
+      '',
+    ].join('\n'),
+  },
   // A whole file, in one autofix pass
   {
     filename,
@@ -269,10 +344,9 @@ const invalids: InvalidTestCase[] = [
       '    vitest: ^3.0.0',
       '',
     ].join('\n'),
-    errors: 6,
+    errors: 5,
     output: [
       'trustPolicy: no-downgrade',
-      '',
       'trustPolicyExclude:',
       '  - cached-factory@0.1.0',
       '',

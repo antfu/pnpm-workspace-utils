@@ -15,6 +15,31 @@ function isMultiline(pair: AST.YAMLPair): boolean {
   return pair.loc.start.line !== pair.loc.end.line
 }
 
+function getKeyName(pair: AST.YAMLPair): string | undefined {
+  const key = pair.key
+  if (key?.type === 'YAMLScalar' && typeof key.value === 'string')
+    return key.value
+  return undefined
+}
+
+/**
+ * Two keys belong to the same option, when one extends the other on a camelCase
+ * boundary - `trustPolicy` / `trustPolicyExclude`, or
+ * `minimumReleaseAgeExclude` / `minimumReleaseAgeExcludePrune`.
+ */
+function isRelated(a: AST.YAMLPair, b: AST.YAMLPair): boolean {
+  const keyA = getKeyName(a)
+  const keyB = getKeyName(b)
+  if (!keyA || !keyB)
+    return false
+
+  const [short, long] = keyA.length < keyB.length ? [keyA, keyB] : [keyB, keyA]
+  return long.length > short.length
+    && long.startsWith(short)
+    && long[short.length] === long[short.length].toUpperCase()
+    && long[short.length] !== long[short.length].toLowerCase()
+}
+
 export default createEslintRule<Options, MessageIds>({
   name: RULE_NAME,
   meta: {
@@ -47,6 +72,28 @@ export default createEslintRule<Options, MessageIds>({
       // Top-level entries only. Nested blocks (catalog groups, `update:`, ...)
       // keep whatever spacing the author gave them.
       const pairs = content.pairs
+
+      // Consecutive entries for the same option (`trustPolicy` followed by
+      // `trustPolicyExclude`) read as one unit: packed inside, padded outside.
+      const groups: AST.YAMLPair[][] = []
+      for (const pair of pairs) {
+        const group = groups.at(-1)
+        if (group && isRelated(group.at(-1)!, pair))
+          group.push(pair)
+        else
+          groups.push([pair])
+      }
+
+      const expectedBefore = new Map<AST.YAMLPair, number>()
+      for (const [index, group] of groups.entries()) {
+        for (const pair of group.slice(1))
+          expectedBefore.set(pair, 0)
+
+        const previous = groups[index - 1]
+        if (previous)
+          expectedBefore.set(group[0], previous.some(isMultiline) || group.some(isMultiline) ? 1 : 0)
+      }
+
       for (let i = 1; i < pairs.length; i++) {
         const prev = pairs[i - 1]
         const pair = pairs[i]
@@ -62,7 +109,7 @@ export default createEslintRule<Options, MessageIds>({
           continue
 
         const blankLines = pair.loc.start.line - prev.loc.end.line - 1
-        const expected = isMultiline(prev) || isMultiline(pair) ? 1 : 0
+        const expected = expectedBefore.get(pair) ?? 0
         if (blankLines === expected)
           continue
 
