@@ -2,7 +2,7 @@
   "type": "module",
   "version": "1.8.0",
   "private": true,
-  "packageManager": "pnpm@11.21.0",
+  "packageManager": "pnpm@11.25.0",
   "scripts": {
     "build": "tsdown",
     "lint": "eslint .",

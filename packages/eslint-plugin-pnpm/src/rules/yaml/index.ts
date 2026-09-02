@@ -1,3 +1,4 @@
+import blankLines from './yaml-blank-lines'
 import enforceSettings from './yaml-enforce-settings'
 import noAnonymousCatalog from './yaml-no-anonymous-catalog'
 import noDuplicateCatalogItem from './yaml-no-duplicate-catalog-item'
@@ -10,4 +11,5 @@ export const rules = {
   'yaml-no-anonymous-catalog': noAnonymousCatalog,
   'yaml-valid-packages': validPackages,
   'yaml-enforce-settings': enforceSettings,
+  'yaml-blank-lines': blankLines,
 }

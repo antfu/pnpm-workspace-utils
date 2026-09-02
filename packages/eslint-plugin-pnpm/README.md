@@ -80,6 +80,7 @@ export default [
       'pnpm/yaml-no-duplicate-catalog-item': 'error',
       'pnpm/yaml-valid-packages': 'error',
       'pnpm/yaml-no-anonymous-catalog': 'error',
+      'pnpm/yaml-blank-lines': 'error',
     },
   },
 ]
@@ -100,6 +101,7 @@ export default [
 - [`yaml-no-anonymous-catalog`](./src/rules/yaml/yaml-no-anonymous-catalog.ts) - Disallow the anonymous `catalog:` in favor of named catalogs (opt-in)
 - [`yaml-valid-packages`](./src/rules/yaml/yaml-valid-packages.ts) - Ensure package patterns match directories with package.json
 - [`yaml-enforce-settings`](./src/rules/yaml/yaml-enforce-settings.ts) - Enforce settings in `pnpm-workspace.yaml`
+- [`yaml-blank-lines`](./src/rules/yaml/yaml-blank-lines.ts) - Require blank lines around multi-line top-level entries, and disallow them between single-line entries (opt-in)
 
 ## Settings
 
