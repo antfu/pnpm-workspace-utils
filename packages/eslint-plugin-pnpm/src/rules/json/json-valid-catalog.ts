@@ -58,6 +58,7 @@ export default createEslintRule<Options, MessageIds>({
           fields: {
             type: 'array',
             description: 'Fields to check for catalog',
+            items: { type: 'string' },
             default: DEFAULT_FIELDS,
           },
         },
