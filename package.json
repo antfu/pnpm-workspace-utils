@@ -16,6 +16,7 @@
     "@antfu/ni": "catalog:dev",
     "@antfu/utils": "catalog:dev",
     "@types/node": "catalog:dev",
+    "@types/picomatch": "catalog:dev",
     "@typescript-eslint/utils": "catalog:dev",
     "@typescript/native-preview": "catalog:dev",
     "bumpp": "catalog:dev",

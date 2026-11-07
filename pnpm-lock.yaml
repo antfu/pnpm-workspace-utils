@@ -18,6 +18,9 @@ catalogs:
     '@types/node':
       specifier: ^26.4.0
       version: 26.4.0
+    '@types/picomatch':
+      specifier: ^4.0.3
+      version: 4.0.3
     '@typescript-eslint/parser':
       specifier: ^8.69.0
       version: 8.69.0
@@ -73,6 +76,9 @@ catalogs:
     pathe:
       specifier: ^2.0.3
       version: 2.0.3
+    picomatch:
+      specifier: ^4.0.7
+      version: 4.0.7
     tinyglobby:
       specifier: ^0.2.17
       version: 0.2.17
@@ -115,6 +121,9 @@ importers:
       '@types/node':
         specifier: catalog:dev
         version: 26.4.0
+      '@types/picomatch':
+        specifier: catalog:dev
+        version: 4.0.3
       '@typescript-eslint/utils':
         specifier: catalog:dev
         version: 8.69.0(eslint@10.9.1(jiti@2.7.0))(typescript@6.0.3)
@@ -190,6 +199,9 @@ importers:
       pathe:
         specifier: catalog:prod
         version: 2.0.3
+      picomatch:
+        specifier: catalog:prod
+        version: 4.0.7
       pnpm-workspace-yaml:
         specifier: workspace:*
         version: link:../pnpm-workspace-yaml
@@ -1090,6 +1102,9 @@ packages:
 
   '@types/node@26.4.0':
     resolution: {integrity: sha512-faiGnoIrLH/V8cibOMEAZ8pMw6oXqSukl29ra4mN8GdaB2ZewzeaLj+INpV5N+Z1eKWzY+IzaIZH2EIR6YZRNQ==}
+
+  '@types/picomatch@4.0.3':
+    resolution: {integrity: sha512-iG0T6+nYJ9FAPmx9SsUlnwcq1ZVRuCXcVEvWnntoPlrOpwtSTKNDC9uVAxTsC3PUvJ+99n4RpAcNgBbHX3JSnQ==}
 
   '@types/unist@3.0.3':
     resolution: {integrity: sha512-ko/gIFJRv177XgZsZcBwnqJN5x/Gien8qNOn0D5bQU/zAzVf9Zt3BlcUiLqhV9y4ARk0GbT3tnUiPNgnTXzc/Q==}
@@ -2342,10 +2357,6 @@ packages:
   picocolors@1.1.1:
     resolution: {integrity: sha512-xceH2snhtb5M9liqDsmEw56le376mTZkEX/jEb/RxNFyegNul7eNslCXP9FDj/Lcu0X8KEyMceP2ntpaHrDEVA==}
 
-  picomatch@4.0.4:
-    resolution: {integrity: sha512-QP88BAKvMam/3NxH6vj2o21R6MjxZUAd6nlwAS/pnGvN9IVLocLHxGYIzFhg6fUQ+5th6P4dv4eW9jX3DSIj7A==}
-    engines: {node: '>=12'}
-
   picomatch@4.0.5:
     resolution: {integrity: sha512-RvwwcruNjI1ncT5xRakeyS9Lf8lcItv34KD+aif+VH9kduAyfYBipGh12274xtenIPZ119/R9BdTBa8gAwSh0A==}
     engines: {node: '>=12'}
@@ -3413,6 +3424,8 @@ snapshots:
     dependencies:
       undici-types: 8.3.0
 
+  '@types/picomatch@4.0.3': {}
+
   '@types/unist@3.0.3': {}
 
   '@typescript-eslint/eslint-plugin@8.69.0(@typescript-eslint/parser@8.69.0(eslint@10.9.1(jiti@2.7.0))(typescript@6.0.3))(eslint@10.9.1(jiti@2.7.0))(typescript@6.0.3)':
@@ -4250,9 +4263,9 @@ snapshots:
     dependencies:
       format: 0.2.2
 
-  fdir@6.5.0(picomatch@4.0.4):
+  fdir@6.5.0(picomatch@4.0.7):
     optionalDependencies:
-      picomatch: 4.0.4
+      picomatch: 4.0.7
 
   file-entry-cache@8.0.0:
     dependencies:
@@ -4891,8 +4904,6 @@ snapshots:
 
   picocolors@1.1.1: {}
 
-  picomatch@4.0.4: {}
-
   picomatch@4.0.5: {}
 
   picomatch@4.0.7: {}
@@ -5098,8 +5109,8 @@ snapshots:
 
   tinyglobby@0.2.17:
     dependencies:
-      fdir: 6.5.0(picomatch@4.0.4)
-      picomatch: 4.0.4
+      fdir: 6.5.0(picomatch@4.0.7)
+      picomatch: 4.0.7
 
   tinypool@2.1.0: {}
 
