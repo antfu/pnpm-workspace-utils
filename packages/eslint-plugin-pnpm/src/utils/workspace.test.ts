@@ -66,3 +66,61 @@ packages:
   expect(isWorkspacePackageJson('package.json', withInvalidPackages)).toBe(true)
   expect(isWorkspacePackageJson('packages/eslint-plugin-pnpm/package.json', withInvalidPackages)).toBe(false)
 })
+
+it('matches nested patterns and excludes dist, build and node_modules', () => {
+  const workspace = createWorkspace(`
+packages:
+  - packages/**
+  - '*/eslint-plugin-pnpm/'
+  - '!packages/pnpm-workspace-yaml/**'
+`)
+
+  expect(isWorkspacePackageJson('packages/eslint-plugin-pnpm/package.json', workspace)).toBe(true)
+  expect(isWorkspacePackageJson('packages/pnpm-workspace-yaml/package.json', workspace)).toBe(false)
+  expect(isWorkspacePackageJson('packages/eslint-plugin-pnpm/dist/package.json', workspace)).toBe(false)
+  expect(isWorkspacePackageJson('packages/eslint-plugin-pnpm/build/package.json', workspace)).toBe(false)
+  expect(isWorkspacePackageJson('packages/eslint-plugin-pnpm/node_modules/pathe/package.json', workspace)).toBe(false)
+  expect(isWorkspacePackageJson('packages/.hidden/package.json', workspace)).toBe(false)
+})
+
+it('matches a path even if the file does not exist yet', () => {
+  const workspace = createWorkspace(`
+packages:
+  - packages/*
+`)
+
+  expect(isWorkspacePackageJson('packages/new-package/package.json', workspace)).toBe(true)
+})
+
+it('matches absolute and Windows-style paths', () => {
+  const workspace = createWorkspace(`
+packages:
+  - packages/*
+`)
+
+  expect(isWorkspacePackageJson(resolve('packages/a/package.json'), workspace)).toBe(true)
+  expect(isWorkspacePackageJson('packages\\a\\package.json', workspace)).toBe(true)
+  expect(isWorkspacePackageJson(resolve('package.json').replaceAll('/', '\\'), workspace)).toBe(true)
+  expect(isWorkspacePackageJson(resolve('../outside/package.json'), workspace)).toBe(false)
+})
+
+it('ignores double negated patterns like tinyglobby', () => {
+  const workspace = createWorkspace(`
+packages:
+  - packages/*
+  - '!!packages/pnpm-workspace-yaml'
+`)
+
+  expect(isWorkspacePackageJson('packages/eslint-plugin-pnpm/package.json', workspace)).toBe(true)
+  expect(isWorkspacePackageJson('packages/pnpm-workspace-yaml/package.json', workspace)).toBe(true)
+})
+
+it('matches absolute patterns relative to the workspace root', () => {
+  const workspace = createWorkspace(`
+packages:
+  - ${resolve('packages/*')}
+`)
+
+  expect(isWorkspacePackageJson('packages/eslint-plugin-pnpm/package.json', workspace)).toBe(true)
+  expect(isWorkspacePackageJson('examples/demo/package.json', workspace)).toBe(false)
+})

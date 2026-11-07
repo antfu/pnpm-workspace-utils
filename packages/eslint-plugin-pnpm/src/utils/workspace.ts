@@ -1,6 +1,7 @@
 import type { RuleContext } from '@typescript-eslint/utils/ts-eslint'
 import type { PnpmWorkspaceYamlExtended } from './_read'
-import { dirname, join, normalize, resolve } from 'pathe'
+import { dirname, isAbsolute, join, normalize, relative, resolve } from 'pathe'
+import picomatch from 'picomatch'
 import { globSync } from 'tinyglobby'
 import { createPnpmWorkspace, findPnpmWorkspace, readPnpmWorkspace } from './_read'
 
@@ -40,27 +41,25 @@ export function getPnpmWorkspace(
 }
 
 export function getWorkspacePackageJsonPaths(workspace: PnpmWorkspaceYamlExtended): Set<string> {
-  const packages = workspace.toJSON()?.packages
   const root = resolve(dirname(workspace.filepath))
   const rootPackageJson = normalize(resolve(root, 'package.json'))
-
-  if (packages === undefined) {
-    return new Set([
-      rootPackageJson,
-      ...globPackageJsonPaths(root, ['**/package.json'], PACKAGE_JSON_GLOB_IGNORE),
-    ])
-  }
-  if (!Array.isArray(packages))
-    return new Set([rootPackageJson])
-
-  const packageJsonGlobs = getPackageJsonPatterns(packages)
-  if (!packageJsonGlobs)
+  const globs = getWorkspacePackageJsonGlobs(workspace)
+  if (!globs)
     return new Set([rootPackageJson])
 
   return new Set([
     rootPackageJson,
-    ...globPackageJsonPaths(root, packageJsonGlobs.include, packageJsonGlobs.exclude),
+    ...globPackageJsonPaths(root, globs.include, globs.exclude),
   ])
+}
+
+function getWorkspacePackageJsonGlobs(workspace: PnpmWorkspaceYamlExtended): { include: string[], exclude: string[] } | undefined {
+  const packages = workspace.toJSON()?.packages
+  if (packages === undefined)
+    return { include: ['**/package.json'], exclude: PACKAGE_JSON_GLOB_IGNORE }
+  if (!Array.isArray(packages))
+    return undefined
+  return getPackageJsonPatterns(packages)
 }
 
 function getPackageJsonPatterns(packages: string[]): { include: string[], exclude: string[] } | undefined {
@@ -120,8 +119,23 @@ export function isWorkspacePackageJson(
     return false
 
   const root = resolve(dirname(workspace.filepath))
-  const target = normalize(resolve(root, filename))
-  return getWorkspacePackageJsonPaths(workspace).has(target)
+  const target = relative(root, normalize(resolve(root, filename)))
+  if (target === 'package.json')
+    return true
+
+  const globs = getWorkspacePackageJsonGlobs(workspace)
+  if (!globs || globs.include.length === 0)
+    return false
+
+  const options = { dot: false, posix: true }
+  const exclude = globs.exclude.filter(pattern => pattern[0] !== '!' || pattern[1] === '(')
+  return picomatch(globs.include.map(pattern => normalizeGlob(root, pattern)), options)(target)
+    && !picomatch(exclude.map(pattern => normalizeGlob(root, pattern)), options)(target)
+}
+
+function normalizeGlob(root: string, pattern: string): string {
+  const glob = pattern.endsWith('/') ? pattern.slice(0, -1) : pattern
+  return isAbsolute(glob) ? relative(root, glob) : normalize(glob)
 }
 
 function toPackageJsonGlob(pattern: string): string {
